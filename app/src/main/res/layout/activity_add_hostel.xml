@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddHostel">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextHostelNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_marginTop="20dp"
+            android:hint="@string/charlet_number_e_g_charlet_one" />
+
+        <EditText
+            android:id="@+id/roomDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_marginTop="20dp"
+            android:hint="@string/room_and_bed_description_e_g_inner_bed_1" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/add_room" />
+
+        <TextView
+            android:id="@+id/textViewViewRoom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/view_rooms"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/seachStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_student"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:textStyle="italic"
+            />
+
+        <TextView
+            android:id="@+id/hostelStudents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view_students"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:textStyle="italic"
+            />
+
+        <TextView
+            android:id="@+id/viewStudents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view_students_2"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:textStyle="italic"
+            />
+
+
+    </LinearLayout>
+
+</ScrollView>
