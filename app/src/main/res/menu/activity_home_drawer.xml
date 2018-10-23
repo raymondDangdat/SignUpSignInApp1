@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_add_staff"
+            android:icon="@drawable/ic_group_add_black"
+            android:title="Manage Staff" />
+        <item
+            android:id="@+id/nav_boysChalet"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Manage Boys Chalets" />
+        <item
+            android:id="@+id/nav_rooms"
+            android:icon="@drawable/ic_room_black_24dp"
+            android:title="Rooms" />
+        <item
+            android:id="@+id/nav_applications"
+            android:icon="@drawable/ic_get_app_black_24dp"
+            android:title="Applications" />
+        <item
+            android:id="@+id/nav_clearance"
+            android:icon="@drawable/ic_clear_black_24dp"
+            android:title="Clear student" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/ic_exit"
+            android:title="Sign out" />
+    </group>
+
+</menu>

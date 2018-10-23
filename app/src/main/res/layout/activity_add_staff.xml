@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/hostel"
+    android:layout_height="match_parent"
+    tools:context=".AddStaff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/setUpImageButton"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_account" />
+
+
+
+        <EditText
+            android:id="@+id/editTextFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ic_account_box"
+            android:hint="Staff fullname "
+            android:background="@drawable/edit_rounded"
+            android:padding="10dp"
+            android:inputType="text"
+            android:maxLength="50" />
+
+
+
+        <EditText
+            android:id="@+id/editTextStaffEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_rounded"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/ic_email"
+            android:hint="Staff Email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_rounded"
+            android:drawableLeft="@drawable/ic_lock"
+            android:padding="10dp"
+            android:hint="Staff Default Password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/editTextCPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_lock"
+            android:layout_marginTop="20dp"
+            android:hint="Confirm Staff Password"
+            android:background="@drawable/edit_rounded"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            />
+
+        <Button
+            android:id="@+id/buttonAddStaff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:text="Add Staff"
+            android:textColor="@android:color/white"
+            />
+
+
+    </LinearLayout>
+
+
+
+</ScrollView>

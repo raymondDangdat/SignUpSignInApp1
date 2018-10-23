@@ -15,7 +15,7 @@
             android:layout_height="300dp"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_account1"/>
+            android:src="@drawable/ic_account"/>
 
 
 

@@ -52,7 +52,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
                 .load(uploadCurrent.getImage())
                 .fit()
                 .centerCrop()
-                .placeholder(R.drawable.ic_account1)
+                .placeholder(R.drawable.ic_account)
                 .into(holder.imageView);
 
     }
