@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +19,10 @@ import android.widget.Toast;
 
 import com.example.raymond.signupsigninapp.Common.Common;
 import com.example.raymond.signupsigninapp.HiewHolders.BoysHostelViewHolder;
+import com.example.raymond.signupsigninapp.HiewHolders.GirlsHostelViewHolder;
 import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.BoysHostel;
+import com.example.raymond.signupsigninapp.Modell.GirlsHostel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,20 +37,19 @@ import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
-public class BoysChaletActivity extends AppCompatActivity {
-
+public class GirlsChaletActivity extends AppCompatActivity {
 
     //firebase
     private FirebaseDatabase database;
-    private DatabaseReference boysChalets;
+    private DatabaseReference girlsChalets;
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    private FirebaseRecyclerAdapter<BoysHostel, BoysHostelViewHolder> adapter;
+    private FirebaseRecyclerAdapter<GirlsHostel, GirlsHostelViewHolder> adapter;
 
-    RecyclerView recyclerView_chalets;
+    RecyclerView recyclerView_girls_chalets;
     RecyclerView.LayoutManager layoutManager;
 
-    BoysHostel newBoysHostel;
+    GirlsHostel newGirlsHostel;
     private Uri saveUri;
     private final int PICK_IMAGE_REQUEST = 90;
 
@@ -60,31 +57,31 @@ public class BoysChaletActivity extends AppCompatActivity {
     private MaterialEditText editTextChaletNumber;
     private Button btnUpload, btnSelect;
 
-    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_boys_chalet);
-
+        setContentView(R.layout.activity_girls_chalet);
 
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        boysChalets = database.getReference("boysHostel");
-        boysChalets.keepSynced(true);
+        girlsChalets = database.getReference("girlsHostel");
+        girlsChalets.keepSynced(true);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         //views
-        recyclerView_chalets = findViewById(R.id.recycler_chalets);
-        recyclerView_chalets.setHasFixedSize(true);
+        recyclerView_girls_chalets = findViewById(R.id.recycler_girls_chalets);
+        recyclerView_girls_chalets.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        recyclerView_chalets.setLayoutManager(layoutManager);
+        recyclerView_girls_chalets.setLayoutManager(layoutManager);
 
 
         //loadChalets
         loadChalets();
+
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,19 +90,46 @@ public class BoysChaletActivity extends AppCompatActivity {
                 showDialog();
             }
         });
-
-
-
-
     }
 
+    private void loadChalets() {
+        adapter = new FirebaseRecyclerAdapter<GirlsHostel, GirlsHostelViewHolder>(
+                GirlsHostel.class,
+                R.layout.girls_hostel_item_layout,
+                GirlsHostelViewHolder.class,
+                girlsChalets
+        ) {
+            @Override
+            protected void populateViewHolder(GirlsHostelViewHolder viewHolder, GirlsHostel model, int position) {
+                viewHolder.txtChaletNumber.setText(model.getRoom());
+               Picasso.with(GirlsChaletActivity.this).load(model.getImage())
+                     .into(viewHolder.imageViewChalet);
+
+               viewHolder.setItemClickListener(new ItemClickListener() {
+                   @Override
+                   public void onClick(View view, int position, boolean isLongClick) {
+                       //send chalet ID and start new activity
+                        Intent roomList = new Intent(GirlsChaletActivity.this, RoomList.class);
+                        roomList.putExtra("chaletId", adapter.getRef(position).getKey());
+                        startActivity(roomList);
+
+                   }
+               });
+            }
+        };
+
+        adapter.notifyDataSetChanged();
+        recyclerView_girls_chalets.setAdapter(adapter);
+    }
+
+
     private void showDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoysChaletActivity.this);
-        alertDialog.setTitle("Add new boys chalet");
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsChaletActivity.this);
+        alertDialog.setTitle("Add new girls chalet");
         alertDialog.setMessage("Please fill the information correctly");
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View add_chalet_layout = inflater.inflate(R.layout.add_new_boys_chalet_layout, null);
+        View add_chalet_layout = inflater.inflate(R.layout.add_new_girls_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
         btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
@@ -136,12 +160,12 @@ public class BoysChaletActivity extends AppCompatActivity {
                 dialog.dismiss();
 
                 //we just create a new category
-                if (newBoysHostel != null){
-                    boysChalets.push().setValue(newBoysHostel);
-                    Toast.makeText(BoysChaletActivity.this, "Chalet added successfully", Toast.LENGTH_SHORT).show();
+                if (newGirlsHostel != null){
+                    girlsChalets.push().setValue(newGirlsHostel);
+                    Toast.makeText(GirlsChaletActivity.this, "Chalet added successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(BoysChaletActivity.this, "New category is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, "New category is empty", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -162,23 +186,23 @@ public class BoysChaletActivity extends AppCompatActivity {
             mDialog.setMessage("Uploading...");
             mDialog.show();
             String imageName = UUID.randomUUID().toString();
-            final StorageReference imageFolder = storageReference.child("BoysChaletImages/" + imageName);
+            final StorageReference imageFolder = storageReference.child("GirllsChaletImages/" + imageName);
             imageFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     mDialog.dismiss();
-                    Toast.makeText(BoysChaletActivity.this, "Uploaded !!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, "Uploaded !!!!", Toast.LENGTH_SHORT).show();
                     imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
                             //set value for new chalet if image upload and we can get download link
-                            newBoysHostel = new BoysHostel(editTextChaletNumber.getText().toString(), uri.toString());
+                            newGirlsHostel = new GirlsHostel(editTextChaletNumber.getText().toString(), uri.toString());
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mDialog.dismiss();
-                            Toast.makeText(BoysChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GirlsChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -186,7 +210,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     mDialog.dismiss();
-                    Toast.makeText(BoysChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -216,34 +240,7 @@ public class BoysChaletActivity extends AppCompatActivity {
 
     }
 
-    private void loadChalets() {
-        adapter = new FirebaseRecyclerAdapter<BoysHostel, BoysHostelViewHolder>(
-                BoysHostel.class,
-                R.layout.boys_hostel_item_layout,
-                BoysHostelViewHolder.class,
-                boysChalets
-        ) {
-            @Override
-            protected void populateViewHolder(BoysHostelViewHolder viewHolder, BoysHostel model, int position) {
-                viewHolder.txtChaletNumber.setText(model.getRoom());
-                Picasso.with(BoysChaletActivity.this).load(model.getImage())
-                        .into(viewHolder.imageViewChalet);
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        //send chalet ID and start new activity
-                        Intent roomList = new Intent(BoysChaletActivity.this, RoomList.class);
-                        roomList.putExtra("chaletId", adapter.getRef(position).getKey());
-                        startActivity(roomList);
 
-                    }
-                });
-            }
-        };
-
-        adapter.notifyDataSetChanged();
-        recyclerView_chalets.setAdapter(adapter);
-    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -256,17 +253,17 @@ public class BoysChaletActivity extends AppCompatActivity {
     }
 
     private void deleteChalet(String key) {
-        boysChalets.child(key).removeValue();
+        girlsChalets.child(key).removeValue();
         Toast.makeText(this, "Chalet deleted!", Toast.LENGTH_SHORT).show();
     }
 
-    private void showUpdateDialog(final String key, final BoysHostel item) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoysChaletActivity.this);
+    private void showUpdateDialog(final String key, final GirlsHostel item) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsChaletActivity.this);
         alertDialog.setTitle("Update boys chalet");
         alertDialog.setMessage("Please fill the information correctly");
 
         LayoutInflater inflater = this.getLayoutInflater();
-        View add_chalet_layout = inflater.inflate(R.layout.add_new_boys_chalet_layout, null);
+        View add_chalet_layout = inflater.inflate(R.layout.add_new_girls_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
         btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
@@ -299,7 +296,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                 dialog.dismiss();
                 //update information
                 item.setRoom(editTextChaletNumber.getText().toString());
-                boysChalets.child(key).setValue(item);
+                girlsChalets.child(key).setValue(item);
 
             }
         });
@@ -313,7 +310,7 @@ public class BoysChaletActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void changeImage(final BoysHostel item) {
+    private void changeImage(final GirlsHostel item) {
         if (saveUri != null){
             final ProgressDialog mDialog = new ProgressDialog(this);
             mDialog.setMessage("Uploading...");
@@ -324,7 +321,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     mDialog.dismiss();
-                    Toast.makeText(BoysChaletActivity.this, "Uploaded !!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, "Uploaded !!!!", Toast.LENGTH_SHORT).show();
                     imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -335,7 +332,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mDialog.dismiss();
-                            Toast.makeText(BoysChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GirlsChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -343,7 +340,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     mDialog.dismiss();
-                    Toast.makeText(BoysChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override

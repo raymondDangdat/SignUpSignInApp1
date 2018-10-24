@@ -13,9 +13,9 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Manage Boys Chalets" />
         <item
-            android:id="@+id/nav_rooms"
-            android:icon="@drawable/ic_room_black_24dp"
-            android:title="Rooms" />
+            android:id="@+id/nav_girls_chalet"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Manage Girls Chalets" />
         <item
             android:id="@+id/nav_applications"
             android:icon="@drawable/ic_get_app_black_24dp"

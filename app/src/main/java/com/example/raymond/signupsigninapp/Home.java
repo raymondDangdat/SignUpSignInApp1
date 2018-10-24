@@ -96,7 +96,9 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_boysChalet) {
             startActivity(new Intent(Home.this, BoysChaletActivity.class));
 
-        } else if (id == R.id.nav_rooms) {
+        } else if (id == R.id.nav_girls_chalet) {
+            Intent girlsIntent = new Intent(Home.this, GirlsChaletActivity.class);
+            startActivity(girlsIntent);
 
         } else if (id == R.id.nav_clearance) {
 

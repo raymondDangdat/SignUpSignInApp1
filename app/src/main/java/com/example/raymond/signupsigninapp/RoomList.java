@@ -71,6 +71,7 @@ public class RoomList extends AppCompatActivity {
         //int firebase
         db = FirebaseDatabase.getInstance();
         boysRoomList = db.getReference("BoysRooms");
+        boysRoomList.keepSynced(true);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
