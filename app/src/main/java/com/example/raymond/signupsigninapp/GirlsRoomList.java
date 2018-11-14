@@ -71,11 +71,11 @@ public class GirlsRoomList extends AppCompatActivity {
 
         //int firebase
         db = FirebaseDatabase.getInstance();
-        girlsRoomList = db.getReference("BoysRooms");
+        girlsRoomList = db.getReference("GirlsRooms");
         girlsRoomList.keepSynced(true);
 
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storageReference = storage.getReference().child("GirlsRoomImages");
 
 
         //init
@@ -215,7 +215,7 @@ public class GirlsRoomList extends AppCompatActivity {
             mDialog.setMessage("Uploading...");
             mDialog.show();
             final String imageName = UUID.randomUUID().toString();
-            final StorageReference imageFolder = storageReference.child("BoysRoomImages/" + imageName);
+            final StorageReference imageFolder = storageReference.child("GirlsRoomImages/" + imageName);
             imageFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -229,6 +229,7 @@ public class GirlsRoomList extends AppCompatActivity {
                             newGirlsRoom.setRoomDescription(editTextRoomDescription.getText().toString());
                             newGirlsRoom.setBedNumber(editTextBedNumber.getText().toString());
                             newGirlsRoom.setRoom(chaletId);
+                            newGirlsRoom.setStatus("available");
                             newGirlsRoom.setImage(uri.toString());
 
                         }
@@ -250,7 +251,7 @@ public class GirlsRoomList extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDialog.setMessage("Uploaded " +progress + "%");
+                    mDialog.setMessage("Uploading... " +progress + "%");
                 }
             });
         }
@@ -368,7 +369,7 @@ public class GirlsRoomList extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDialog.setMessage("Uploaded " +progress + "%");
+                    mDialog.setMessage("Uploading... " +progress + "%");
                 }
             });
         }

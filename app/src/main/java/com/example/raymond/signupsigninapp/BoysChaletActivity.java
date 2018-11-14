@@ -192,7 +192,7 @@ public class BoysChaletActivity extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDialog.setMessage("Uploaded " +progress + "%");
+                    mDialog.setMessage("Uploading... " +progress + "%");
                 }
             });
         }

@@ -109,7 +109,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
                    @Override
                    public void onClick(View view, int position, boolean isLongClick) {
                        //send chalet ID and start new activity
-                        Intent roomList = new Intent(GirlsChaletActivity.this, RoomList.class);
+                        Intent roomList = new Intent(GirlsChaletActivity.this, GirlsRoomList.class);
                         roomList.putExtra("chaletId", adapter.getRef(position).getKey());
                         startActivity(roomList);
 
@@ -216,7 +216,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDialog.setMessage("Uploaded " +progress + "%");
+                    mDialog.setMessage("Uploading... " +progress + "%");
                 }
             });
         }
@@ -259,7 +259,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
 
     private void showUpdateDialog(final String key, final GirlsHostel item) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsChaletActivity.this);
-        alertDialog.setTitle("Update boys chalet");
+        alertDialog.setTitle("Update girls chalet");
         alertDialog.setMessage("Please fill the information correctly");
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -316,7 +316,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
             mDialog.setMessage("Uploading...");
             mDialog.show();
             String imageName = UUID.randomUUID().toString();
-            final StorageReference imageFolder = storageReference.child("BoysChaletImages/" + imageName);
+            final StorageReference imageFolder = storageReference.child("GirlsChaletImages/" + imageName);
             imageFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

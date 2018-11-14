@@ -5,15 +5,25 @@ public class GirlsRoom {
     private String RoomDescription;
     private String Image;
     private String Room;
+    private String Status;
 
     public GirlsRoom() {
     }
 
-    public GirlsRoom(String bedNumber, String roomDescription, String room, String image) {
+    public GirlsRoom(String bedNumber, String roomDescription, String room,String status, String image) {
         BedNumber = bedNumber;
         RoomDescription = roomDescription;
         Image = image;
         Room = room;
+        Status = status;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     public String getRoom() {

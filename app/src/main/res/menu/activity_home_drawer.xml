@@ -17,13 +17,28 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Manage Girls Chalets" />
         <item
-            android:id="@+id/nav_applications"
-            android:icon="@drawable/ic_get_app_black_24dp"
-            android:title="Applications" />
+            android:id="@+id/nav_students"
+            android:icon="@drawable/ic_group_add_black"
+            android:title="Students" />
         <item
             android:id="@+id/nav_clearance"
             android:icon="@drawable/ic_clear_black_24dp"
             android:title="Clear student" />
+
+        <item
+            android:id="@+id/nav_generate_pin"
+            android:icon="@drawable/ic_security_black_24dp"
+            android:title="Generate PIN " />
+
+
+        <item
+            android:id="@+id/register_eligible_student"
+            android:icon="@drawable/ic_security_black_24dp"
+            android:title="Register JAMB OR Mat. No " />
+        <item
+            android:id="@+id/nav_manage_applicants"
+            android:icon="@drawable/ic_group_add_black"
+            android:title="Applications" />
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_exit"

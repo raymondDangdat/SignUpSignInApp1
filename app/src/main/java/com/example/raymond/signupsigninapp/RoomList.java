@@ -229,6 +229,7 @@ public class RoomList extends AppCompatActivity {
                             newBoysRoom.setRoomDescription(editTextRoomDescription.getText().toString());
                             newBoysRoom.setBedNumber(editTextBedNumber.getText().toString());
                             newBoysRoom.setRoom(chaletId);
+                            newBoysRoom.setStatus("available");
                             newBoysRoom.setImage(uri.toString());
 
                         }
@@ -250,7 +251,7 @@ public class RoomList extends AppCompatActivity {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDialog.setMessage("Uploaded " +progress + "%");
+                    mDialog.setMessage("Uploading... " +progress + "%");
                 }
             });
         }
