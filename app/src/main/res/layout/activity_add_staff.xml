@@ -9,18 +9,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageButton
+
+        <include
+            layout="@layout/app_bar_layout"
+            android:id="@+id/add_staff_toolbar">
+        </include>
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/setUpImageButton"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
-            android:background="@android:color/white"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_account" />
+            android:src="@drawable/ic_account_circle" />
 
 
 
@@ -30,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/ic_account_box"
-            android:hint="Staff fullname "
+            android:hint="@string/staff_fullname"
             android:background="@drawable/edit_rounded"
             android:padding="10dp"
             android:inputType="text"
@@ -46,7 +50,7 @@
             android:background="@drawable/edit_rounded"
             android:padding="10dp"
             android:drawableLeft="@drawable/ic_email"
-            android:hint="Staff Email"
+            android:hint="@string/staff_email"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -57,7 +61,7 @@
             android:background="@drawable/edit_rounded"
             android:drawableLeft="@drawable/ic_lock"
             android:padding="10dp"
-            android:hint="Staff Default Password"
+            android:hint="@string/staff_default_password"
             android:inputType="textPassword" />
 
         <EditText
@@ -66,7 +70,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_lock"
             android:layout_marginTop="20dp"
-            android:hint="Confirm Staff Password"
+            android:hint="@string/confirm_staff_password"
             android:background="@drawable/edit_rounded"
             android:padding="10dp"
             android:inputType="textPassword"
@@ -78,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
-            android:text="Add Staff"
+            android:text="@string/add_staff"
             android:textColor="@android:color/white"
             />
 

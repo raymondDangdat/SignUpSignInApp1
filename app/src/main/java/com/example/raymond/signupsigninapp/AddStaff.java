@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -29,10 +30,14 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AddStaff extends AppCompatActivity {
     private EditText editTextFullName, editTextPassword, editTextEmail, editTextCPassword;
     private Button btnAddStaff;
-    private ImageButton imageButtonStaff;
+    private CircleImageView imageButtonStaff;
+
+    private Toolbar addStaffToolBar;
 
 
     private FirebaseDatabase db;
@@ -69,6 +74,14 @@ public class AddStaff extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("staffProfile");
         mAuth = FirebaseAuth.getInstance();
+
+        //initialize our toolBar
+        addStaffToolBar = findViewById(R.id.add_staff_toolbar);
+        setSupportActionBar(addStaffToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Add Staff");
+
 
 
 
@@ -145,25 +158,6 @@ public class AddStaff extends AppCompatActivity {
                         finish();
                     }
                 });
-//                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//                    @Override
-//                    public void onSuccess(AuthResult authResult) {
-//                        String user_id = mAuth.getCurrentUser().getUid();
-//                        DatabaseReference current_user =  mDatabaseStudents.child(user_id);
-//                        current_user.child("name").setValue(Surname);
-//                        current_user.child("image").setValue("default for now");
-//                        mProgress.dismiss();
-//                        Toast.makeText(SetUpActivity.this, "Registration successful you can proceed to login", Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        mProgress.dismiss();
-//                        Toast.makeText(SetUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                });
             }else {
                 Toast.makeText(this, "Password miss match", Toast.LENGTH_SHORT).show();
             }

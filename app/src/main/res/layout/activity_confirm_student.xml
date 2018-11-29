@@ -3,48 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/hostel"
     android:layout_height="match_parent"
     tools:context=".ConfirmStudentActivity">
 
+    <include
+        layout="@layout/app_bar_layout"
+        android:id="@+id/confirmToolBar">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_centerInParent="true"
+    </include>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_jamb"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_below="@+id/confirmToolBar"
+        android:layout_height="match_parent">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:id="@+id/edtMatOrJamb"
-            android:hint="JAMB/MAT. NUMBER"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@android:color/black"
-            android:textSize="34sp"
-            android:inputType="text"
-            app:met_baseColor="@android:color/black"
-            app:met_maxCharacters="20"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="true"/>
+    </android.support.v7.widget.RecyclerView>
 
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="8dp"
-            android:background="@drawable/rounded_button"
-            android:textSize="30dp"
-            android:text="Confirm"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:id="@+id/btnConfirm"/>
-    </LinearLayout>
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        android:src="@drawable/ic_add_circle_black_24dp" />
 
 
 

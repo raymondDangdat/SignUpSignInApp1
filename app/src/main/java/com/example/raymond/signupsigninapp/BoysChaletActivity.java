@@ -52,6 +52,8 @@ public class BoysChaletActivity extends AppCompatActivity {
     RecyclerView recyclerView_chalets;
     RecyclerView.LayoutManager layoutManager;
 
+    private Toolbar chaletToolBar;
+
     BoysHostel newBoysHostel;
     private Uri saveUri;
     private final int PICK_IMAGE_REQUEST = 90;
@@ -75,6 +77,15 @@ public class BoysChaletActivity extends AppCompatActivity {
         boysChalets.keepSynced(true);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+
+
+        //initialize our toolBar
+        chaletToolBar = findViewById(R.id.boys_chalet_toolbar);
+        setSupportActionBar(chaletToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Boys Chalets");
 
         //views
         recyclerView_chalets = findViewById(R.id.recycler_chalets);
@@ -226,8 +237,7 @@ public class BoysChaletActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(BoysHostelViewHolder viewHolder, BoysHostel model, int position) {
                 viewHolder.txtChaletNumber.setText(model.getRoom());
-                Picasso.with(BoysChaletActivity.this).load(model.getImage())
-                        .into(viewHolder.imageViewChalet);
+                Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {

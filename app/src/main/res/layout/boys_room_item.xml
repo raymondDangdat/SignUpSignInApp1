@@ -16,7 +16,7 @@
             android:src="@drawable/hostel"
             android:scaleType="centerCrop" />
         <LinearLayout
-            android:weightSum="2"
+            android:weightSum="3"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_margin="8dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtRoomDescription"
-                android:text="Room Description"
+                android:text="Description"
                 android:textColor="@android:color/white"
                 android:background="#4f0e0d0e"
                 android:textSize="20sp"
@@ -40,6 +40,19 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txtBedNumber"
                 android:text="Bed Number"
+                android:textColor="@android:color/white"
+                android:background="#4f0e0d0e"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtStatus"
+                android:text="Status"
                 android:textColor="@android:color/white"
                 android:background="#4f0e0d0e"
                 android:textSize="20sp"

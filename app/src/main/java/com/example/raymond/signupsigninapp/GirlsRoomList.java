@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,8 @@ public class GirlsRoomList extends AppCompatActivity {
 
     FloatingActionButton fab;
     GirlsRoom newGirlsRoom;
+
+    private Toolbar roomToolBar;
 
     private Uri saveUri;
 
@@ -83,6 +86,18 @@ public class GirlsRoomList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+
+
+
+        //initialize our toolBar
+        roomToolBar = findViewById(R.id.girls_room_toolbar);
+        setSupportActionBar(roomToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Girls Rooms");
+
+
 
         fab = findViewById(R.id.fab);
 
@@ -171,10 +186,10 @@ public class GirlsRoomList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(GirlsRoomViewHolder viewHolder, GirlsRoom model, int position) {
                 viewHolder.txtRoomDescription.setText(model.getRoomDescription());
+                viewHolder.txtStatus.setText(model.getStatus());
                 viewHolder.txtBedNumber.setText(model.getBedNumber());
-                Picasso.with(getBaseContext())
-                       .load(model.getImage())
-                       .into(viewHolder.imageViewRoom);
+                Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+
 
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override

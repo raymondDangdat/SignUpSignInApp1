@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,6 +62,8 @@ public class RoomList extends AppCompatActivity {
     private MaterialEditText editTextRoomDescription, editTextBedNumber;
     private Button btnSelect, btnUpload;
 
+    private Toolbar roomToolBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,16 @@ public class RoomList extends AppCompatActivity {
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+
+
+
+        //initialize our toolBar
+        roomToolBar = findViewById(R.id.boys_room_toolbar);
+        setSupportActionBar(roomToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Boys Rooms");
 
 
         //init
@@ -171,9 +184,9 @@ public class RoomList extends AppCompatActivity {
             protected void populateViewHolder(BoysRoomViewHolder viewHolder, BoysRoom model, int position) {
                 viewHolder.txtRoomDescription.setText(model.getRoomDescription());
                 viewHolder.txtBedNumber.setText(model.getBedNumber());
-                Picasso.with(getBaseContext())
-                        .load(model.getImage())
-                        .into(viewHolder.imageViewRoom);
+                viewHolder.txtStatus.setText(model.getStatus());
+                Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+
 
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override

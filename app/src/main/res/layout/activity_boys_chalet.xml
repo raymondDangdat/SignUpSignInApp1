@@ -7,10 +7,18 @@
     android:background="@drawable/hostel"
     tools:context=".BoysChaletActivity">
 
+
+    <include
+        layout="@layout/app_bar_layout"
+        android:id="@+id/boys_chalet_toolbar">
+
+    </include>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_chalets"
         android:scrollbars="vertical"
         android:layout_width="wrap_content"
+        android:layout_below="@+id/boys_chalet_toolbar"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
@@ -23,8 +31,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/ic_add_circle_black" />
+        app:backgroundTint="@color/colorPrimaryDark"
+        android:src="@drawable/ic_add_circle_black_24dp" />
 
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,8 @@ public class GirlsChaletActivity extends AppCompatActivity {
     private Uri saveUri;
     private final int PICK_IMAGE_REQUEST = 90;
 
+    private Toolbar chaletToolBar;
+
     //add new chalet layout
     private MaterialEditText editTextChaletNumber;
     private Button btnUpload, btnSelect;
@@ -70,6 +73,16 @@ public class GirlsChaletActivity extends AppCompatActivity {
         girlsChalets.keepSynced(true);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+
+
+
+
+        //initialize our toolBar
+        chaletToolBar = findViewById(R.id.girls_chalet_toolbar);
+        setSupportActionBar(chaletToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Girls Chalets");
 
         //views
         recyclerView_girls_chalets = findViewById(R.id.recycler_girls_chalets);
@@ -102,8 +115,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(GirlsHostelViewHolder viewHolder, GirlsHostel model, int position) {
                 viewHolder.txtChaletNumber.setText(model.getRoom());
-               Picasso.with(GirlsChaletActivity.this).load(model.getImage())
-                     .into(viewHolder.imageViewChalet);
+                Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
 
                viewHolder.setItemClickListener(new ItemClickListener() {
                    @Override

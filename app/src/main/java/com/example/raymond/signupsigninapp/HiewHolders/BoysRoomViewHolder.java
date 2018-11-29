@@ -12,7 +12,7 @@ import com.example.raymond.signupsigninapp.R;
 
 public class BoysRoomViewHolder extends RecyclerView.ViewHolder implements
         View.OnClickListener, View.OnCreateContextMenuListener  {
-    public TextView txtRoomDescription, txtBedNumber;
+    public TextView txtRoomDescription, txtBedNumber, txtStatus;
     public ImageView imageViewRoom;
 
     private ItemClickListener itemClickListener;
@@ -24,6 +24,7 @@ public class BoysRoomViewHolder extends RecyclerView.ViewHolder implements
         txtRoomDescription = itemView.findViewById(R.id.txtRoomDescription);
         imageViewRoom = itemView.findViewById(R.id.imageViewRoom);
         txtBedNumber = itemView.findViewById(R.id.txtBedNumber);
+        txtStatus = itemView.findViewById(R.id.txtStatus);
 
         itemView.setOnCreateContextMenuListener(this);
 
