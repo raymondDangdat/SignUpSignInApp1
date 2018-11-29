@@ -27,7 +27,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
 
     public class SearchAdapterViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener{
-        public TextView txtFullName, txtMatNo, txtPhone, txtGender;
+        public TextView txtFullName, txtMatNo, txtPhone, txtGender, parentNo, bedNumber, chaletName, department;
         public CircleImageView profilePic;
         private ItemClickListener itemClickListener;
 
@@ -38,6 +38,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
             txtGender = itemView.findViewById(R.id.text_view_gender);
             txtPhone = itemView.findViewById(R.id.phone);
             profilePic = itemView.findViewById(R.id.image_view_profile);
+            parentNo = itemView.findViewById(R.id.parentNo);
+            bedNumber = itemView.findViewById(R.id.bedNumber);
+            chaletName = itemView.findViewById(R.id.chaletName);
+            department = itemView.findViewById(R.id.department);
+
 
             itemView.setOnClickListener(this);
 
@@ -60,7 +65,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
     @Override
     public SearchAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.occupants_layout1, parent, false);
+                .inflate(R.layout.occupants_layout2, parent, false);
         return new SearchAdapterViewHolder(v);
     }
 
@@ -72,6 +77,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
         holder.txtPhone.setText(occupants.getPhone());
         holder.txtMatNo.setText(occupants.getMatNo());
         holder.txtGender.setText(occupants.getGender());
+        holder.department.setText(occupants.getDepartment());
+        holder.bedNumber.setText(occupants.getBedNumber());
+        holder.chaletName.setText(occupants.getChaletName());
+        holder.parentNo.setText(occupants.getParentNo());
         Picasso.get().load(occupants.getProfilePic()).into(holder.profilePic);
 
         holder.setItemClickListener(new ItemClickListener() {
