@@ -75,7 +75,7 @@ public class AddStaff extends AppCompatActivity {
         storageReference = storage.getReference("staffProfile");
         mAuth = FirebaseAuth.getInstance();
 
-        //initialize our toolBar
+        //initialize toolBar
         addStaffToolBar = findViewById(R.id.add_staff_toolbar);
         setSupportActionBar(addStaffToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -133,7 +133,7 @@ public class AddStaff extends AppCompatActivity {
                                 staff.child(user_id).child("image").setValue(downloadUrl);
                                 mProgress.dismiss();
                                 Toast.makeText(AddStaff.this, "Staff added", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(AddStaff.this, Home.class));
+                                startActivity(new Intent(AddStaff.this, ViewStaff.class));
                                 //sendEmailVerification();
 
 
@@ -155,7 +155,7 @@ public class AddStaff extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         mProgress.dismiss();
                         Toast.makeText(AddStaff.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
+
                     }
                 });
             }else {
@@ -163,7 +163,7 @@ public class AddStaff extends AppCompatActivity {
             }
 
         }else {
-            Toast.makeText(this, "Sorry can not add staff with empty field(s) or without picture", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sorry can not add staff with empty field(s) or without a picture", Toast.LENGTH_SHORT).show();
         }
 
     }

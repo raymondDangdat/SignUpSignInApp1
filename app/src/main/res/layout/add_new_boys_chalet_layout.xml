@@ -15,9 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edtChaletNumber"
-            android:hint="Chalet number"
             android:textColorHint="@color/colorPrimary"
-            android:text=""
+            android:text="Chalet "
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:inputType="text"
@@ -41,7 +40,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/rounded_button"
                 android:textSize="15sp"
-                android:text="SELECT"
+                android:text="Pick Image"
                 android:textColor="@android:color/white"
                 android:id="@+id/btnSelect"/>
 

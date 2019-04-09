@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,34 +47,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseDatabase database;
-    private DatabaseReference applicants;
-    private FirebaseUser mUser;
-
-//    //arrays for search
-//    ArrayList<String> fullNameList;
-//    ArrayList<String> matNoList;
-//    ArrayList<String> genderList;
-//    ArrayList<String> phoneList;
-//    ArrayList<String> profilePicList;
+//    private FirebaseDatabase database;
+//    private DatabaseReference applicants;
+     private FirebaseUser mUser;
 //
-//    SearchAdapter searchAdapter;
-
-    private MaterialSearchBar searchBar;
-
-    ArrayList<Occupants> arrayList;
-
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-
-    private DatabaseReference staff;
+//    private MaterialSearchBar searchBar;
+//
+//    ArrayList<Occupants> arrayList;
+//
+//    private RecyclerView recyclerView;
+//    private RecyclerView.LayoutManager layoutManager;
+//
+//    private DatabaseReference staff;
 
     private String userId;
 
-    private TextView fullName, email;
-    private ImageView imgProfile;
+//    private TextView fullName, email;
+//    private ImageView imgProfile;
+//
+//    private FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder> adapter;
 
-    private FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder> adapter;
+    // rework
+    private ImageButton img_gdom, img_boysdom, img_confirmStudent, img_hostelRules;
     private FirebaseAuth auth;
 
 
@@ -82,47 +77,83 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Hostel Occupants");
+        toolbar.setTitle("Hostel Administrator");
         setSupportActionBar(toolbar);
 
+        //rework
+        img_boysdom = findViewById(R.id.img_bdom);
+        img_gdom = findViewById(R.id.img_gdom);
+        img_confirmStudent = findViewById(R.id.img_confirmStudent);
+        img_hostelRules = findViewById(R.id.img_hostelRules);
 
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        applicants = database.getReference("Applications");
 
-        searchBar = findViewById(R.id.searchBar);
-
-        arrayList = new ArrayList<>();
-
-        searchBar.addTextChangeListener(new TextWatcher() {
+        //rework
+        //setOnclick listener to the buttons
+        img_boysdom.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().isEmpty()){
-                    search(s.toString());
-                }else {
-                    loadOccupants();
-                }
-
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, BoysChaletActivity.class));
             }
         });
 
+        img_gdom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, GirlsChaletActivity.class));
+            }
+        });
 
-        //init
-        recyclerView = findViewById(R.id.recycler_occupants);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        img_confirmStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, ConfirmStudentActivity.class));
+            }
+        });
+
+        img_hostelRules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, HostelRules.class));
+            }
+        });
+
+        auth = FirebaseAuth.getInstance();
+//        database = FirebaseDatabase.getInstance();
+//        applicants = database.getReference("Applications");
+//
+//        searchBar = findViewById(R.id.searchBar);
+//
+//        arrayList = new ArrayList<>();
+////
+//        searchBar.addTextChangeListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if (!s.toString().isEmpty()){
+//                    search(s.toString());
+//                }else {
+//                    loadOccupants();
+//                }
+//
+//            }
+//        });
+
+//
+//        //init
+//        recyclerView = findViewById(R.id.recycler_occupants);
+//        recyclerView.setHasFixedSize(true);
+//        layoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
 //        //initialize our lists
 //        fullNameList = new ArrayList<>();
@@ -171,7 +202,7 @@ public class Home extends AppCompatActivity
 
         final FirebaseUser user = auth.getCurrentUser();
 
-        staff = database.getReference().child("staff");
+        //staff = database.getReference().child("staff");
 
 
 
@@ -198,65 +229,65 @@ public class Home extends AppCompatActivity
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        staff.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                View headerView = navigationView.getHeaderView(0);
-                email = headerView.findViewById(R.id.email);
-                email.setText(user.getEmail());
-                fullName = headerView.findViewById(R.id.fullname);
-                fullName.setText(dataSnapshot.child(userId).child("fullName").getValue(String.class));
-
-
-
-                imgProfile = headerView.findViewById(R.id.imageView);
-                String profileUri = dataSnapshot.child(userId).child("image").getValue(String.class);
-                Picasso.get().load(profileUri).into(imgProfile);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        
-        
-        loadOccupants();
+//
+//        staff.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                View headerView = navigationView.getHeaderView(0);
+//                email = headerView.findViewById(R.id.email);
+//                email.setText(user.getEmail());
+//                fullName = headerView.findViewById(R.id.fullname);
+//                fullName.setText(dataSnapshot.child(userId).child("fullName").getValue(String.class));
+//
+//
+//
+//                imgProfile = headerView.findViewById(R.id.imageView);
+//                String profileUri = dataSnapshot.child(userId).child("image").getValue(String.class);
+//                Picasso.get().load(profileUri).into(imgProfile);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//        loadOccupants();
 
 
 
     }
-
-    private void search(String s) {
-        Query query = applicants.orderByChild("fullName")
-                .startAt(s)
-                .endAt(s+ "\uf8ff");
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()){
-                    arrayList.clear();
-                    for (DataSnapshot dss: dataSnapshot.getChildren()){
-                        final Occupants occupants = dss.getValue(Occupants.class);
-                        arrayList.add(occupants);
-                    }
-
-                    SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), arrayList);
-                    recyclerView.setAdapter(searchAdapter);
-                    searchAdapter.notifyDataSetChanged();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+//
+//    private void search(String s) {
+//        Query query = applicants.orderByChild("fullName")
+//                .startAt(s)
+//                .endAt(s+ "\uf8ff");
+//
+//        query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.hasChildren()){
+//                    arrayList.clear();
+//                    for (DataSnapshot dss: dataSnapshot.getChildren()){
+//                        final Occupants occupants = dss.getValue(Occupants.class);
+//                        arrayList.add(occupants);
+//                    }
+//
+//                    SearchAdapter searchAdapter = new SearchAdapter(getApplicationContext(), arrayList);
+//                    recyclerView.setAdapter(searchAdapter);
+//                    searchAdapter.notifyDataSetChanged();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
 //    private void setAdapter(final String searchedString) {
 //        applicants.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -323,40 +354,40 @@ public class Home extends AppCompatActivity
 //            }
 //        });
 //    }
-
-    private void loadOccupants() {
-        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(
-                Occupants.class,
-                R.layout.occupants_layout1,
-                OccupantsViewHolder.class,
-                applicants
-        ) {
-            @Override
-            protected void populateViewHolder(OccupantsViewHolder viewHolder, Occupants model, int position) {
-                //viewHolder.txtDepartment.setText(model.getDepartment());
-                viewHolder.txtFullName.setText(model.getFullName());
-                viewHolder.txtGender.setText(model.getGender());
-                viewHolder.txtMatNo.setText(model.getMatNo());
-                viewHolder.txtPhone.setText(model.getPhone());
-//                viewHolder.txtParentPhone.setText(model.getParentNo());
-
-                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(viewHolder.profilePic);
-
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        Intent occupantDetail = new Intent(Home.this, OccupantDetail.class);
-                        occupantDetail.putExtra("occupantId", adapter.getRef(position).getKey());
-                        startActivity(occupantDetail);
-
-                    }
-                });
-            }
-        };
-
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
-    }
+//
+//    private void loadOccupants() {
+//        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(
+//                Occupants.class,
+//                R.layout.occupants_layout1,
+//                OccupantsViewHolder.class,
+//                applicants
+//        ) {
+//            @Override
+//            protected void populateViewHolder(OccupantsViewHolder viewHolder, Occupants model, int position) {
+//                //viewHolder.txtDepartment.setText(model.getDepartment());
+//                viewHolder.txtFullName.setText(model.getFullName());
+//                viewHolder.txtGender.setText(model.getGender());
+//                viewHolder.txtMatNo.setText(model.getMatNo());
+//                viewHolder.txtPhone.setText(model.getPhone());
+////                viewHolder.txtParentPhone.setText(model.getParentNo());
+//
+//                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(viewHolder.profilePic);
+//
+//                viewHolder.setItemClickListener(new ItemClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position, boolean isLongClick) {
+//                        Intent occupantDetail = new Intent(Home.this, OccupantDetail.class);
+//                        occupantDetail.putExtra("occupantId", adapter.getRef(position).getKey());
+//                        startActivity(occupantDetail);
+//
+//                    }
+//                });
+//            }
+//        };
+//
+//        adapter.notifyDataSetChanged();
+//        recyclerView.setAdapter(adapter);
+//    }
 
 
     @Override
@@ -412,6 +443,8 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_clearance) {
 
         } else if (id == R.id.nav_students) {
+            Intent viewStudents = new Intent(Home.this, ViewStudents.class);
+            startActivity(viewStudents);
 
         } else if (id == R.id.nav_sign_out) {
             //logout
@@ -420,16 +453,19 @@ public class Home extends AppCompatActivity
             auth.signOut();
             startActivity(signIn);
 
-        }else if (id == R.id.nav_students){
-
-        }else if (id == R.id.nav_generate_pin){
-            Intent genPin = new Intent(Home.this, GenaratePin.class);
-            startActivity(genPin);
-
-        }else if (id == R.id.register_eligible_student){
+        }
+//        else if (id == R.id.nav_generate_pin){
+//            Intent genPin = new Intent(Home.this, GenaratePin.class);
+//            startActivity(genPin);
+//
+//        }
+        else if (id == R.id.register_eligible_student){
             Intent eligibleIntent = new Intent(Home.this, ConfirmStudentActivity.class);
             startActivity(eligibleIntent);
 
+        }else if (id == R.id.nav_view_staff){
+            Intent viewStaff = new Intent(Home.this, ViewStaff.class);
+            startActivity(viewStaff);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

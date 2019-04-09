@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_add_staff"
             android:icon="@drawable/ic_group_add_black"
-            android:title="Manage Staff" />
+            android:title="Add Staff" />
         <item
             android:id="@+id/nav_boysChalet"
             android:icon="@drawable/ic_home_black_24dp"
@@ -19,26 +19,26 @@
         <item
             android:id="@+id/nav_students"
             android:icon="@drawable/ic_group_add_black"
-            android:title="Students" />
+            android:title="View Students" />
         <item
             android:id="@+id/nav_clearance"
             android:icon="@drawable/ic_clear_black_24dp"
             android:title="Clear student" />
 
         <item
-            android:id="@+id/nav_generate_pin"
+            android:id="@+id/nav_view_staff"
             android:icon="@drawable/ic_security_black_24dp"
-            android:title="Generate PIN " />
+            android:title="View Staff" />
 
 
         <item
             android:id="@+id/register_eligible_student"
             android:icon="@drawable/ic_security_black_24dp"
-            android:title="Register JAMB OR Mat. No " />
-        <item
-            android:id="@+id/nav_manage_applicants"
-            android:icon="@drawable/ic_group_add_black"
-            android:title="Applications" />
+            android:title="Confirm JAMB OR Mat. No " />
+        <!--<item-->
+            <!--android:id="@+id/nav_manage_applicants"-->
+            <!--android:icon="@drawable/ic_group_add_black"-->
+            <!--android:title="Applications" />-->
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_exit"
