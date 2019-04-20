@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GenerateRegPin"
+    android:orientation="vertical">
+
+
+    <include
+        layout="@layout/app_bar_layout"
+        android:id="@+id/codes_toolbar">
+    </include>
+
+    <TextView
+        android:id="@+id/txtCodes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="XXXXXX"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
+    <Button
+        android:id="@+id/btnGenerate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:text="Generate PIN"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:layout_margin="20dp"
+        />
+
+
+</LinearLayout>

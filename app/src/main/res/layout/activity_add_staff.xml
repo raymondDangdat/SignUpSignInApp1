@@ -53,6 +53,32 @@
             android:hint="@string/staff_email"
             android:inputType="textEmailAddress" />
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_marginTop="15dp"
+            android:text="Staff Role"
+            android:layout_margin="15dp"
+            android:textAlignment="center"
+            android:textSize="16sp"/>
+
+
+        <Spinner
+            android:id="@+id/roles"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_button"
+            android:textAlignment="center"
+            android:pointerIcon="arrow"
+            android:entries="@array/roles">
+
+        </Spinner>
+
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"

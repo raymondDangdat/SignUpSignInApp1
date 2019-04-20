@@ -454,11 +454,11 @@ public class Home extends AppCompatActivity
             startActivity(signIn);
 
         }
-//        else if (id == R.id.nav_generate_pin){
-//            Intent genPin = new Intent(Home.this, GenaratePin.class);
-//            startActivity(genPin);
-//
-//        }
+        else if (id == R.id.nav_generate_codes){
+            Intent genPin = new Intent(Home.this, GenerateRegPin.class);
+            startActivity(genPin);
+
+        }
         else if (id == R.id.register_eligible_student){
             Intent eligibleIntent = new Intent(Home.this, ConfirmStudentActivity.class);
             startActivity(eligibleIntent);

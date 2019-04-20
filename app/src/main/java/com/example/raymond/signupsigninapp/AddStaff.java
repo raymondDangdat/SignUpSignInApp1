@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +39,8 @@ public class AddStaff extends AppCompatActivity {
     private CircleImageView imageButtonStaff;
 
     private Toolbar addStaffToolBar;
+
+    private Spinner spinnerRole;
 
 
     private FirebaseDatabase db;
@@ -65,12 +68,13 @@ public class AddStaff extends AppCompatActivity {
         imageButtonStaff = findViewById(R.id.setUpImageButton);
         btnAddStaff = findViewById(R.id.buttonAddStaff);
 
+        spinnerRole = findViewById(R.id.roles);
         mProgress = new ProgressDialog(this);
 
 
         //init firebase
         db = FirebaseDatabase.getInstance();
-        staff = db.getReference("staff");
+        staff = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("users").child("Staff");
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("staffProfile");
         mAuth = FirebaseAuth.getInstance();
@@ -110,6 +114,7 @@ public class AddStaff extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
         String confirmPassword = editTextCPassword.getText().toString();
         final String fullName = editTextFullName.getText().toString();
+        final String role = spinnerRole.getSelectedItem().toString().trim();
 
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && mImageUri != null
@@ -128,12 +133,14 @@ public class AddStaff extends AppCompatActivity {
 
                                 staff.child(user_id).child("email").setValue(email);
                                 staff.child(user_id).child("fullName").setValue(fullName);
+                                staff.child(user_id).child("role").setValue(role);
 
 
                                 staff.child(user_id).child("image").setValue(downloadUrl);
                                 mProgress.dismiss();
                                 Toast.makeText(AddStaff.this, "Staff added", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(AddStaff.this, ViewStaff.class));
+                                finish();
                                 //sendEmailVerification();
 
 
