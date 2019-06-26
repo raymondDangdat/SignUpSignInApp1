@@ -60,7 +60,7 @@ public class GenerateRegPin extends AppCompatActivity {
                 Toast.makeText(GenerateRegPin.this, "Code saved successfully", Toast.LENGTH_SHORT).show();
 
                 txtCode.setText(code);
-                btnGenrate.setText("Reset");
+                btnGenrate.setText("Re-Generate");
 
             }
         });

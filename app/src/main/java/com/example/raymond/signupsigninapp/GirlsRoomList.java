@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raymond.signupsigninapp.Common.Common;
@@ -25,10 +27,14 @@ import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.BoysRoom;
 import com.example.raymond.signupsigninapp.Modell.GirlsRoom;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -62,7 +68,11 @@ public class GirlsRoomList extends AppCompatActivity {
 
     //add new room
     private MaterialEditText editTextRoomDescription, editTextBedNumber;
-    private Button btnSelect, btnUpload;
+    //private Button btnSelect, btnUpload;
+
+    private int countRoom;
+    private TextView txtRoomCount;
+
 
 
 
@@ -74,11 +84,13 @@ public class GirlsRoomList extends AppCompatActivity {
 
         //int firebase
         db = FirebaseDatabase.getInstance();
-        girlsRoomList = db.getReference("GirlsRooms");
+        girlsRoomList = db.getInstance().getReference().child("plasuHostel2019").child("hostels").child("girlsHostel").child("GirlsRooms");
         girlsRoomList.keepSynced(true);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference().child("GirlsRoomImages");
+
+        txtRoomCount = findViewById(R.id.number_of_rooms);
 
 
         //init
@@ -95,7 +107,7 @@ public class GirlsRoomList extends AppCompatActivity {
         setSupportActionBar(roomToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Girls Rooms");
+        getSupportActionBar().setTitle("Girls Bed Spaces");
 
 
 
@@ -118,6 +130,28 @@ public class GirlsRoomList extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        girlsRoomList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countRoom = (int) dataSnapshot.getChildrenCount();
+                    txtRoomCount.setText(Integer.toString(countRoom));
+
+                }else{
+                    txtRoomCount.setText("No Room");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        super.onStart();
+    }
+
     private void showAddBoysRoomDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsRoomList.this);
         alertDialog.setTitle("Add new girls room");
@@ -128,32 +162,40 @@ public class GirlsRoomList extends AppCompatActivity {
 
         editTextRoomDescription = add_new_boys_room_layout.findViewById(R.id.edtRoomDescription);
         editTextBedNumber = add_new_boys_room_layout.findViewById(R.id.edtBedBumber);
-        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
 
         alertDialog.setView(add_new_boys_room_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
-
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
+//
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+
+                newGirlsRoom = new GirlsRoom();
+                newGirlsRoom.setRoomDescription(editTextRoomDescription.getText().toString());
+                newGirlsRoom.setBedNumber(editTextBedNumber.getText().toString());
+                newGirlsRoom.setRoom(chaletId);
+                newGirlsRoom.setStatus("available");
+                newGirlsRoom.setImage("null");
+
 
                 //we just create a new category
                 if (newGirlsRoom != null){
@@ -177,31 +219,37 @@ public class GirlsRoomList extends AppCompatActivity {
     }
 
     private void loadRoomList(String chaletId){
-        adapter = new FirebaseRecyclerAdapter<GirlsRoom, GirlsRoomViewHolder>(
-                GirlsRoom.class,
-                R.layout.girls_room_item,
-                GirlsRoomViewHolder.class,
-                girlsRoomList.orderByChild("room").equalTo(chaletId)
-        ) {
+        FirebaseRecyclerOptions<GirlsRoom>options = new FirebaseRecyclerOptions.Builder<GirlsRoom>()
+                .setQuery(girlsRoomList.orderByChild("room").equalTo(chaletId),GirlsRoom.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<GirlsRoom, GirlsRoomViewHolder>(options) {
             @Override
-            protected void populateViewHolder(GirlsRoomViewHolder viewHolder, GirlsRoom model, int position) {
-                viewHolder.txtRoomDescription.setText(model.getRoomDescription());
-                viewHolder.txtStatus.setText(model.getStatus());
-                viewHolder.txtBedNumber.setText(model.getBedNumber());
-                Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+            protected void onBindViewHolder(@NonNull GirlsRoomViewHolder holder, int position, @NonNull GirlsRoom model) {
+                holder.txtRoomDescription.setText(model.getRoomDescription());
+                holder.txtStatus.setText(model.getStatus());
+                holder.txtBedNumber.setText(model.getBedNumber());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
 
 
-                viewHolder.setItemClickListener(new ItemClickListener() {
+                holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         //code later
                     }
                 });
             }
-        };
 
-        adapter.notifyDataSetChanged();
+            @NonNull
+            @Override
+            public GirlsRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.girls_room_item, parent, false);
+                GirlsRoomViewHolder viewHolder = new GirlsRoomViewHolder(view);
+                return viewHolder;
+            }
+        };
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 
 
@@ -220,7 +268,7 @@ public class GirlsRoomList extends AppCompatActivity {
         if (requestCode == Common.PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null){
             saveUri = data.getData();
-            btnSelect.setText("Image selected");
+            //btnSelect.setText("Image selected");
         }
     }
 
@@ -296,8 +344,8 @@ public class GirlsRoomList extends AppCompatActivity {
 
         editTextRoomDescription = add_new_boys_room_layout.findViewById(R.id.edtRoomDescription);
         editTextBedNumber = add_new_boys_room_layout.findViewById(R.id.edtBedBumber);
-        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
 
 
         //set default values
@@ -307,20 +355,20 @@ public class GirlsRoomList extends AppCompatActivity {
         alertDialog.setView(add_new_boys_room_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeImage(item);
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeImage(item);
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {

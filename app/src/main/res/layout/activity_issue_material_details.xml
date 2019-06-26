@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IssueMaterialDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <include
+            layout="@layout/app_bar_layout"
+            android:id="@+id/occupant_details_toolbar">
+        </include>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            app:civ_border_width="5dp"
+            app:civ_border_color="@color/colorPrimary"
+            android:src="@drawable/ic_account_circle"
+            android:layout_width="250dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="250dp" />
+
+
+        <TextView
+            android:id="@+id/fullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:layout_marginEnd="15dp"
+            android:padding="10dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Materials to be issued"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_gravity="center_horizontal"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mattress"
+            android:onClick="selectItem"
+            android:text="Mattress"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pillow"
+            android:onClick="selectItem"
+            android:text="Pillow"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/keys"
+            android:onClick="selectItem"
+            android:text="Keys"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bedSheets"
+            android:onClick="selectItem"
+            android:text="Bedsheets"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/blanket"
+            android:onClick="selectItem"
+            android:text="Blanket"
+            />
+
+        <Button
+            android:id="@+id/buttonIssue"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:text="Issue"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:onClick="submitMaterialIssued"
+            />
+    </LinearLayout>
+
+</ScrollView>

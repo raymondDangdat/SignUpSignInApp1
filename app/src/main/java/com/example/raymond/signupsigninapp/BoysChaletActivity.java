@@ -18,7 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raymond.signupsigninapp.Common.Common;
@@ -26,10 +28,14 @@ import com.example.raymond.signupsigninapp.HiewHolders.BoysHostelViewHolder;
 import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.BoysHostel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -49,10 +55,14 @@ public class BoysChaletActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseRecyclerAdapter<BoysHostel, BoysHostelViewHolder> adapter;
 
+    private TextView txtChaletCount;
+
     RecyclerView recyclerView_chalets;
     RecyclerView.LayoutManager layoutManager;
 
     private Toolbar chaletToolBar;
+
+    private int countChalet;
 
     BoysHostel newBoysHostel;
     private Uri saveUri;
@@ -60,7 +70,7 @@ public class BoysChaletActivity extends AppCompatActivity {
 
     //add new chalet layout
     private MaterialEditText editTextChaletNumber;
-    private Button btnUpload, btnSelect;
+   // private Button btnUpload, btnSelect;
 
     DrawerLayout drawer;
 
@@ -69,11 +79,13 @@ public class BoysChaletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boys_chalet);
 
+        txtChaletCount = findViewById(R.id.txtChaletCount);
+
 
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        boysChalets = database.getReference("boysHostel");
+        boysChalets = database.getInstance().getReference().child("plasuHostel2019").child("hostels").child("boysHostel");
         boysChalets.keepSynced(true);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -95,7 +107,7 @@ public class BoysChaletActivity extends AppCompatActivity {
 
 
         //loadChalets
-        loadChalets();
+        //loadChalets();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +122,29 @@ public class BoysChaletActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        loadChalets();
+        boysChalets.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countChalet = (int) dataSnapshot.getChildrenCount();
+                    txtChaletCount.setText(Integer.toString(countChalet));
+
+                }else{
+                    txtChaletCount.setText("No Chalet");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        super.onStart();
+    }
+
     private void showDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(BoysChaletActivity.this);
         alertDialog.setTitle("Add new boys chalet");
@@ -119,40 +154,41 @@ public class BoysChaletActivity extends AppCompatActivity {
         View add_chalet_layout = inflater.inflate(R.layout.add_new_boys_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
-        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
+       // btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
+        //btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
 
         alertDialog.setView(add_chalet_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
 
 
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
 
         //set button
-        alertDialog.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
                 //we just create a new category
+                newBoysHostel = new BoysHostel(editTextChaletNumber.getText().toString(), "null");
                 if (newBoysHostel != null){
                     boysChalets.push().setValue(newBoysHostel);
                     Toast.makeText(BoysChaletActivity.this, "Chalet added successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(BoysChaletActivity.this, "New category is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BoysChaletActivity.this, "New chalet info is empty", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -215,7 +251,7 @@ public class BoysChaletActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null){
             saveUri = data.getData();
-            btnSelect.setText("Image selected");
+            //btnSelect.setText("Image selected");
         }
     }
 
@@ -228,17 +264,16 @@ public class BoysChaletActivity extends AppCompatActivity {
     }
 
     private void loadChalets() {
-        adapter = new FirebaseRecyclerAdapter<BoysHostel, BoysHostelViewHolder>(
-                BoysHostel.class,
-                R.layout.boys_hostel_item_layout,
-                BoysHostelViewHolder.class,
-                boysChalets
-        ) {
+        FirebaseRecyclerOptions<BoysHostel>options = new FirebaseRecyclerOptions.Builder<BoysHostel>()
+                .setQuery(boysChalets, BoysHostel.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<BoysHostel, BoysHostelViewHolder>(options) {
             @Override
-            protected void populateViewHolder(BoysHostelViewHolder viewHolder, BoysHostel model, int position) {
-                viewHolder.txtChaletNumber.setText(model.getRoom());
-                Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
-                viewHolder.setItemClickListener(new ItemClickListener() {
+            protected void onBindViewHolder(@NonNull BoysHostelViewHolder holder, int position, @NonNull BoysHostel model) {
+                holder.txtChaletNumber.setText(model.getRoom());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
+                holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         //send chalet ID and start new activity
@@ -249,10 +284,18 @@ public class BoysChaletActivity extends AppCompatActivity {
                     }
                 });
             }
-        };
 
-        adapter.notifyDataSetChanged();
+            @NonNull
+            @Override
+            public BoysHostelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.boys_hostel_item_layout, parent, false);
+                BoysHostelViewHolder viewHolder = new BoysHostelViewHolder(view);
+                return viewHolder;
+            }
+        };
         recyclerView_chalets.setAdapter(adapter);
+        adapter.startListening();
+
     }
 
     @Override
@@ -279,28 +322,28 @@ public class BoysChaletActivity extends AppCompatActivity {
         View add_chalet_layout = inflater.inflate(R.layout.add_new_boys_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
-        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
 
         editTextChaletNumber.setText(item.getRoom());
 
         alertDialog.setView(add_chalet_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
 
 
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeImage(item);
-            }
-        });
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeImage(item);
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {

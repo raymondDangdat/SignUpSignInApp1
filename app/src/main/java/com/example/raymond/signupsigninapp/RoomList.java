@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raymond.signupsigninapp.Common.Common;
@@ -24,10 +26,14 @@ import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.BoysHostel;
 import com.example.raymond.signupsigninapp.Modell.BoysRoom;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -56,11 +62,14 @@ public class RoomList extends AppCompatActivity {
 
     String chaletId = "";
 
+    private int countRoom;
+    private TextView txtRoomCount;
+
     private FirebaseRecyclerAdapter<BoysRoom, BoysRoomViewHolder> adapter;
 
     //add new room
     private MaterialEditText editTextRoomDescription, editTextBedNumber;
-    private Button btnSelect, btnUpload;
+    //private Button btnSelect, btnUpload;
 
     private Toolbar roomToolBar;
 
@@ -71,9 +80,13 @@ public class RoomList extends AppCompatActivity {
         setContentView(R.layout.activity_room_list);
 
 
+        txtRoomCount = findViewById(R.id.number_of_rooms);
+
+
+
         //int firebase
         db = FirebaseDatabase.getInstance();
-        boysRoomList = db.getReference("BoysRooms");
+        boysRoomList = db.getInstance().getReference().child("plasuHostel2019").child("hostels").child("boysHostel").child("BoysRooms");
         boysRoomList.keepSynced(true);
 
         storage = FirebaseStorage.getInstance();
@@ -87,7 +100,7 @@ public class RoomList extends AppCompatActivity {
         setSupportActionBar(roomToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Boys Rooms");
+        getSupportActionBar().setTitle("Boys Bed Spaces");
 
 
         //init
@@ -115,6 +128,30 @@ public class RoomList extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onStart() {
+        boysRoomList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countRoom = (int) dataSnapshot.getChildrenCount();
+                    txtRoomCount.setText(Integer.toString(countRoom));
+
+                }else{
+                    txtRoomCount.setText("No Room");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        super.onStart();
+    }
+
+
     private void showAddBoysRoomDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(RoomList.this);
         alertDialog.setTitle("Add new boys room");
@@ -125,32 +162,40 @@ public class RoomList extends AppCompatActivity {
 
         editTextRoomDescription = add_new_boys_room_layout.findViewById(R.id.edtRoomDescription);
         editTextBedNumber = add_new_boys_room_layout.findViewById(R.id.edtBedBumber);
-        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
 
         alertDialog.setView(add_new_boys_room_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+
+                newBoysRoom = new BoysRoom();
+                newBoysRoom.setRoomDescription(editTextRoomDescription.getText().toString());
+                newBoysRoom.setBedNumber(editTextBedNumber.getText().toString());
+                newBoysRoom.setRoom(chaletId);
+                newBoysRoom.setStatus("available");
+                newBoysRoom.setImage("null");
+
 
                 //we just create a new category
                 if (newBoysRoom != null){
@@ -174,21 +219,23 @@ public class RoomList extends AppCompatActivity {
     }
 
     private void loadRoomList(String chaletId) {
-        adapter = new FirebaseRecyclerAdapter<BoysRoom, BoysRoomViewHolder>(
-                BoysRoom.class,
-                R.layout.boys_room_item,
-                BoysRoomViewHolder.class,
-                boysRoomList.orderByChild("room").equalTo(chaletId)
-        ) {
+        FirebaseRecyclerOptions<BoysRoom>options = new FirebaseRecyclerOptions.Builder<BoysRoom>()
+                .setQuery(boysRoomList.orderByChild("room").equalTo(chaletId), BoysRoom.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<BoysRoom, BoysRoomViewHolder>(options) {
             @Override
-            protected void populateViewHolder(BoysRoomViewHolder viewHolder, BoysRoom model, int position) {
-                viewHolder.txtRoomDescription.setText(model.getRoomDescription());
-                viewHolder.txtBedNumber.setText(model.getBedNumber());
-                viewHolder.txtStatus.setText(model.getStatus());
-                Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+            protected void onBindViewHolder(@NonNull BoysRoomViewHolder holder, int position, @NonNull BoysRoom model) {
+                holder.txtRoomDescription.setText(model.getRoomDescription());
+                holder.txtBedNumber.setText(model.getBedNumber());
+                holder.txtStatus.setText(model.getStatus());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
 
 
-                viewHolder.setItemClickListener(new ItemClickListener() {
+
+
+
+                holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         //code later
@@ -196,10 +243,17 @@ public class RoomList extends AppCompatActivity {
                     }
                 });
             }
-        };
 
-        adapter.notifyDataSetChanged();
+            @NonNull
+            @Override
+            public BoysRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.boys_room_item, parent, false);
+                BoysRoomViewHolder viewHolder = new BoysRoomViewHolder(view);
+                return viewHolder;
+            }
+        };
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 
 
@@ -218,7 +272,7 @@ public class RoomList extends AppCompatActivity {
         if (requestCode == Common.PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null){
             saveUri = data.getData();
-            btnSelect.setText("Image selected");
+            //btnSelect.setText("Image selected");
         }
     }
 
@@ -294,8 +348,8 @@ public class RoomList extends AppCompatActivity {
 
         editTextRoomDescription = add_new_boys_room_layout.findViewById(R.id.edtRoomDescription);
         editTextBedNumber = add_new_boys_room_layout.findViewById(R.id.edtBedBumber);
-        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_new_boys_room_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_new_boys_room_layout.findViewById(R.id.btnUpload);
 
 
         //set default values
@@ -305,21 +359,21 @@ public class RoomList extends AppCompatActivity {
         alertDialog.setView(add_new_boys_room_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
 
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeImage(item);
-            }
-        });
-
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeImage(item);
+//            }
+//        });
+//
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override

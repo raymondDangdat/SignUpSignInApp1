@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/hostel"
+    android:background="@drawable/chostel"
     android:layout_height="match_parent"
     tools:context=".AddStaff">
 
@@ -24,7 +24,7 @@
             android:layout_height="200dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_account_circle" />
+            android:src="@drawable/images" />
 
 
 
@@ -54,30 +54,30 @@
             android:inputType="textEmailAddress" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:background="@drawable/rounded_button"
-            android:layout_marginTop="15dp"
-            android:text="Staff Role"
-            android:layout_margin="15dp"
-            android:textAlignment="center"
-            android:textSize="16sp"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:background="@drawable/rounded_button"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:text="Staff Role"-->
+            <!--android:layout_margin="15dp"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="16sp"/>-->
 
 
-        <Spinner
-            android:id="@+id/roles"
-            android:layout_margin="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:textAlignment="center"
-            android:pointerIcon="arrow"
-            android:entries="@array/roles">
+        <!--<Spinner-->
+            <!--android:id="@+id/roles"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:background="@drawable/rounded_button"-->
+            <!--android:textAlignment="center"-->
+            <!--android:pointerIcon="arrow"-->
+            <!--android:entries="@array/roles">-->
 
-        </Spinner>
+        <!--</Spinner>-->
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -106,7 +106,7 @@
             android:id="@+id/buttonAddStaff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_margin="10dp"
             android:background="@drawable/rounded_button"
             android:text="@string/add_staff"
             android:textColor="@android:color/white"

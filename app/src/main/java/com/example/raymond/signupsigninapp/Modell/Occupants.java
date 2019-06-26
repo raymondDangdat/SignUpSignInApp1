@@ -9,6 +9,7 @@ public class Occupants {
     private String parentNo;
     private String phone;
     private String matNo;
+    private String JAMB;
     private String faculty;
     private String bedNumber;
     private String chaletName;
@@ -16,10 +17,8 @@ public class Occupants {
     public Occupants() {
     }
 
-    public Occupants(String fullName, String gender, String department,
-                     String profilePic, String parentNo, String phone, String matNo,
-                     String faculty,
-                     String bedNumber, String chaletName) {
+    public Occupants(String fullName, String gender, String department, String profilePic, String parentNo, String phone, String matNo, String JAMB,
+                     String faculty, String bedNumber, String chaletName) {
         this.fullName = fullName;
         this.gender = gender;
         this.department = department;
@@ -27,9 +26,18 @@ public class Occupants {
         this.parentNo = parentNo;
         this.phone = phone;
         this.matNo = matNo;
+        this.JAMB = JAMB;
         this.faculty = faculty;
         this.bedNumber = bedNumber;
         this.chaletName = chaletName;
+    }
+
+    public String getJAMB() {
+        return JAMB;
+    }
+
+    public void setJAMB(String JAMB) {
+        this.JAMB = JAMB;
     }
 
     public String getFaculty() {

@@ -2,6 +2,7 @@ package com.example.raymond.signupsigninapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import com.example.raymond.signupsigninapp.HiewHolders.OccupantsViewHolder;
 import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.Occupants;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,6 +52,10 @@ public class ViewStudents extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
+    private int countOccupants;
+    private TextView txtOccupantsCount;
+    private TextView txtOccupants;
+
 
 
     private FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder> adapter;
@@ -70,7 +78,20 @@ public class ViewStudents extends AppCompatActivity {
 
 
         database = FirebaseDatabase.getInstance();
-        applicants = database.getReference("Applications");
+        applicants = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("Occupants");
+
+
+        //init
+        recyclerView = findViewById(R.id.recycler_occupants);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        txtOccupantsCount = findViewById(R.id.number_of_occupants);
+        txtOccupants = findViewById(R.id.txtOccupants);
+
+
 
         searchBar = findViewById(R.id.searchBar);
 
@@ -98,12 +119,6 @@ public class ViewStudents extends AppCompatActivity {
             }
         });
 
-        //init
-        recyclerView = findViewById(R.id.recycler_occupants);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
 
 
@@ -146,24 +161,42 @@ public class ViewStudents extends AppCompatActivity {
 
     //method to load occupants
     private void loadOccupants() {
-        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(
-                Occupants.class,
-                R.layout.occupants_layout1,
-                OccupantsViewHolder.class,
-                applicants
-        ) {
+        applicants.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void populateViewHolder(OccupantsViewHolder viewHolder, Occupants model, int position) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countOccupants = (int) dataSnapshot.getChildrenCount();
+                    txtOccupantsCount.setText(Integer.toString(countOccupants));
+
+                }else{
+                    txtOccupantsCount.setText("No Occupants yet");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<Occupants>options = new FirebaseRecyclerOptions.Builder<Occupants>()
+                .setQuery(applicants, Occupants.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OccupantsViewHolder holder, int position, @NonNull Occupants model) {
                 //viewHolder.txtDepartment.setText(model.getDepartment());
-                viewHolder.txtFullName.setText(model.getFullName());
-                viewHolder.txtGender.setText(model.getGender());
-                viewHolder.txtMatNo.setText(model.getMatNo());
-                viewHolder.txtPhone.setText(model.getPhone());
+                holder.txtFullName.setText(model.getFullName());
+                holder.txtGender.setText(model.getGender());
+                holder.txtMatNo.setText(model.getMatNo());
+                holder.txtPhone.setText(model.getPhone());
 //                viewHolder.txtParentPhone.setText(model.getParentNo());
 
-                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(viewHolder.profilePic);
+                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(holder.profilePic);
 
-                viewHolder.setItemClickListener(new ItemClickListener() {
+                holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         Intent occupantDetail = new Intent(ViewStudents.this, OccupantDetail.class);
@@ -173,10 +206,17 @@ public class ViewStudents extends AppCompatActivity {
                     }
                 });
             }
-        };
 
-        adapter.notifyDataSetChanged();
+            @NonNull
+            @Override
+            public OccupantsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.occupants_layout1, parent, false);
+                OccupantsViewHolder viewHolder = new OccupantsViewHolder(view);
+                return viewHolder;
+            }
+        };
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 
 
@@ -208,10 +248,10 @@ public class ViewStudents extends AppCompatActivity {
 
     private void showSortDialog() {
         //Options to display
-        String[] sortOptions = {"Male", "Female", "Chalets" };
+        String[] sortOptions = {"Male", "Female"};
         //create alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sort by:")
+        builder.setTitle("Sort by Gender:")
                 .setIcon(R.drawable.ic_action_sort)
                 .setItems(sortOptions, new DialogInterface.OnClickListener() {
                     @Override
@@ -219,15 +259,132 @@ public class ViewStudents extends AppCompatActivity {
                         //the which contains the index position of the selected item
                         if (which==0){
                             //Male selected
-                            Toast.makeText(ViewStudents.this, "Males sorted", Toast.LENGTH_SHORT).show();
+                            loadMales();
                         }else if (which==1){
-                            //female sorted
-                            Toast.makeText(ViewStudents.this, "Female", Toast.LENGTH_SHORT).show();
+                            loadFemales();
                         }else if (which==2){
                             //to be sorted according to chalet number
                         }
                     }
                 });
         builder.show();
+    }
+
+    private void loadFemales() {
+        txtOccupants.setText("Female Occupants");
+        applicants.orderByChild("gender").equalTo("Female").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countOccupants = (int) dataSnapshot.getChildrenCount();
+                    txtOccupantsCount.setText(Integer.toString(countOccupants));
+
+                }else {
+                    txtOccupantsCount.setText("No female occupant");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<Occupants>options = new FirebaseRecyclerOptions.Builder<Occupants>()
+                .setQuery(applicants.orderByChild("gender").equalTo("Female"), Occupants.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OccupantsViewHolder holder, int position, @NonNull Occupants model) {
+                //viewHolder.txtDepartment.setText(model.getDepartment());
+                holder.txtFullName.setText(model.getFullName());
+                holder.txtGender.setText(model.getGender());
+                holder.txtMatNo.setText(model.getMatNo());
+                holder.txtPhone.setText(model.getPhone());
+//                viewHolder.txtParentPhone.setText(model.getParentNo());
+
+                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(holder.profilePic);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Intent occupantDetail = new Intent(ViewStudents.this, OccupantDetail.class);
+                        occupantDetail.putExtra("occupantId", adapter.getRef(position).getKey());
+                        startActivity(occupantDetail);
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public OccupantsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.occupants_layout1, parent, false);
+                OccupantsViewHolder viewHolder = new OccupantsViewHolder(view);
+                return viewHolder;
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    private void loadMales() {
+        txtOccupants.setText("Male Occupants");
+        applicants.orderByChild("gender").equalTo("Male").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countOccupants = (int) dataSnapshot.getChildrenCount();
+                    txtOccupantsCount.setText(Integer.toString(countOccupants));
+
+                }else {
+                    txtOccupantsCount.setText("No Male Occupant");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<Occupants>options = new FirebaseRecyclerOptions.Builder<Occupants>()
+                .setQuery(applicants.orderByChild("gender").equalTo("Male"), Occupants.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Occupants, OccupantsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OccupantsViewHolder holder, int position, @NonNull Occupants model) {
+                //viewHolder.txtDepartment.setText(model.getDepartment());
+                holder.txtFullName.setText(model.getFullName());
+                holder.txtGender.setText(model.getGender());
+                holder.txtMatNo.setText(model.getMatNo());
+                holder.txtPhone.setText(model.getPhone());
+//                viewHolder.txtParentPhone.setText(model.getParentNo());
+
+                Picasso.get().load(model.getProfilePic()).placeholder(R.drawable.ic_account_circle).into(holder.profilePic);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Intent occupantDetail = new Intent(ViewStudents.this, OccupantDetail.class);
+                        occupantDetail.putExtra("occupantId", adapter.getRef(position).getKey());
+                        startActivity(occupantDetail);
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public OccupantsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.occupants_layout1, parent, false);
+                OccupantsViewHolder viewHolder = new OccupantsViewHolder(view);
+                return viewHolder;
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 }

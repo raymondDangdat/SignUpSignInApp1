@@ -2,47 +2,46 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_add_staff"
             android:icon="@drawable/ic_group_add_black"
             android:title="Add Staff" />
-        <item
-            android:id="@+id/nav_boysChalet"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Manage Boys Chalets" />
-        <item
-            android:id="@+id/nav_girls_chalet"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Manage Girls Chalets" />
+        <!--<item-->
+            <!--android:id="@+id/nav_boysChalet"-->
+            <!--android:icon="@drawable/ic_home_black_24dp"-->
+            <!--android:title="Manage Boys Chalets" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_girls_chalet"-->
+            <!--android:icon="@drawable/ic_home_black_24dp"-->
+            <!--android:title="Manage Girls Chalets" />-->
         <item
             android:id="@+id/nav_students"
-            android:icon="@drawable/ic_group_add_black"
+            android:icon="@drawable/ic_group"
             android:title="View Students" />
         <item
-            android:id="@+id/nav_clearance"
-            android:icon="@drawable/ic_clear_black_24dp"
-            android:title="Clear student" />
-
-        <item
             android:id="@+id/nav_view_staff"
-            android:icon="@drawable/ic_security_black_24dp"
-            android:title="View Staff" />
-
-
+            android:icon="@drawable/ic_group"
+            android:title="View Staff"/>
         <item
             android:id="@+id/register_eligible_student"
             android:icon="@drawable/ic_security_black_24dp"
-            android:title="Confirm JAMB OR Mat. No " />
+            android:title="Issue Hostel Materials " />
         <item
-            android:id="@+id/nav_generate_codes"
-            android:icon="@drawable/ic_group_add_black"
-            android:title="Generate Reg. Pin" />
+            android:id="@+id/nav_codes_generated"
+            android:icon="@drawable/ic_security_black_24dp"
+            android:title="Codes Generated" />
+        <item
+            android:id="@+id/nav_clearance"
+            android:icon="@drawable/ic_check_circle"
+            android:title="Clear student" />
+        <item
+            android:id="@+id/nav_change_password"
+            android:icon="@drawable/ic_lock_open"
+            android:title="Reset Password" />
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_exit"
             android:title="Sign out" />
     </group>
-
 </menu>

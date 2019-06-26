@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raymond.signupsigninapp.Common.Common;
@@ -25,10 +27,14 @@ import com.example.raymond.signupsigninapp.Interface.ItemClickListener;
 import com.example.raymond.signupsigninapp.Modell.BoysHostel;
 import com.example.raymond.signupsigninapp.Modell.GirlsHostel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -56,9 +62,12 @@ public class GirlsChaletActivity extends AppCompatActivity {
 
     private Toolbar chaletToolBar;
 
+    private int countChalet;
+    private TextView txtChaletCount;
+
     //add new chalet layout
     private MaterialEditText editTextChaletNumber;
-    private Button btnUpload, btnSelect;
+    //private Button btnUpload, btnSelect;
 
 
     @Override
@@ -66,10 +75,12 @@ public class GirlsChaletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_girls_chalet);
 
+        txtChaletCount = findViewById(R.id.txtChaletCount);
+
 
         //firebase
         database = FirebaseDatabase.getInstance();
-        girlsChalets = database.getReference("girlsHostel");
+        girlsChalets = database.getInstance().getReference().child("plasuHostel2019").child("hostels").child("girlsHostel");
         girlsChalets.keepSynced(true);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -105,33 +116,63 @@ public class GirlsChaletActivity extends AppCompatActivity {
         });
     }
 
-    private void loadChalets() {
-        adapter = new FirebaseRecyclerAdapter<GirlsHostel, GirlsHostelViewHolder>(
-                GirlsHostel.class,
-                R.layout.girls_hostel_item_layout,
-                GirlsHostelViewHolder.class,
-                girlsChalets
-        ) {
+    @Override
+    protected void onStart() {
+        loadChalets();
+        girlsChalets.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void populateViewHolder(GirlsHostelViewHolder viewHolder, GirlsHostel model, int position) {
-                viewHolder.txtChaletNumber.setText(model.getRoom());
-                Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countChalet = (int) dataSnapshot.getChildrenCount();
+                    txtChaletCount.setText(Integer.toString(countChalet));
 
-               viewHolder.setItemClickListener(new ItemClickListener() {
-                   @Override
-                   public void onClick(View view, int position, boolean isLongClick) {
-                       //send chalet ID and start new activity
+                }else{
+                    txtChaletCount.setText("No Chalet");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        super.onStart();
+    }
+
+    private void loadChalets() {
+        FirebaseRecyclerOptions<GirlsHostel>options = new FirebaseRecyclerOptions.Builder<GirlsHostel>()
+                .setQuery(girlsChalets, GirlsHostel.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<GirlsHostel, GirlsHostelViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull GirlsHostelViewHolder holder, int position, @NonNull GirlsHostel model) {
+                holder.txtChaletNumber.setText(model.getRoom());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewChalet);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //send chalet ID and start new activity
                         Intent roomList = new Intent(GirlsChaletActivity.this, GirlsRoomList.class);
                         roomList.putExtra("chaletId", adapter.getRef(position).getKey());
                         startActivity(roomList);
 
-                   }
-               });
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public GirlsHostelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.girls_hostel_item_layout, parent, false);
+                GirlsHostelViewHolder viewHolder = new GirlsHostelViewHolder(view);
+                return viewHolder;
             }
         };
 
-        adapter.notifyDataSetChanged();
-        recyclerView_girls_chalets.setAdapter(adapter);
+       recyclerView_girls_chalets.setAdapter(adapter);
+       adapter.startListening();
     }
 
 
@@ -144,26 +185,26 @@ public class GirlsChaletActivity extends AppCompatActivity {
         View add_chalet_layout = inflater.inflate(R.layout.add_new_girls_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
-        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
 
         alertDialog.setView(add_chalet_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
-
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
+//
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                uploadImage();
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -171,13 +212,15 @@ public class GirlsChaletActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-                //we just create a new category
+                newGirlsHostel = new GirlsHostel(editTextChaletNumber.getText().toString(), "null");
+
+                //we just create a new chalet
                 if (newGirlsHostel != null){
                     girlsChalets.push().setValue(newGirlsHostel);
                     Toast.makeText(GirlsChaletActivity.this, "Chalet added successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(GirlsChaletActivity.this, "New category is empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsChaletActivity.this, "New chalet info is empty", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -240,7 +283,7 @@ public class GirlsChaletActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null){
             saveUri = data.getData();
-            btnSelect.setText("Image selected");
+            //btnSelect.setText("Image selected");
         }
     }
 
@@ -278,28 +321,28 @@ public class GirlsChaletActivity extends AppCompatActivity {
         View add_chalet_layout = inflater.inflate(R.layout.add_new_girls_chalet_layout, null);
 
         editTextChaletNumber = add_chalet_layout.findViewById(R.id.edtChaletNumber);
-        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
-        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
+//        btnSelect = add_chalet_layout.findViewById(R.id.btnSelect);
+//        btnUpload = add_chalet_layout.findViewById(R.id.btnUpload);
 
         editTextChaletNumber.setText(item.getRoom());
 
         alertDialog.setView(add_chalet_layout);
         alertDialog.setIcon(R.drawable.ic_home_black_24dp);
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-
-
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeImage(item);
-            }
-        });
+//        btnSelect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                chooseImage();
+//            }
+//        });
+//
+//
+//        btnUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeImage(item);
+//            }
+//        });
 
         //set button
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {

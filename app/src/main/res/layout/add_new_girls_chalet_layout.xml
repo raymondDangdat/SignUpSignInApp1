@@ -17,7 +17,7 @@
             android:id="@+id/edtChaletNumber"
             android:hint="Chalet number"
             android:textColorHint="@color/colorPrimary"
-            android:text=""
+            android:text="Chalet "
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:inputType="text"
@@ -33,29 +33,29 @@
             android:layout_height="wrap_content">
 
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="8dp"
-                android:background="@drawable/rounded_button"
-                android:textSize="15sp"
-                android:text="SELECT"
-                android:textColor="@android:color/white"
-                android:id="@+id/btnSelect"/>
+            <!--<Button-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:background="@drawable/rounded_button"-->
+                <!--android:textSize="15sp"-->
+                <!--android:text="SELECT"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:id="@+id/btnSelect"/>-->
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="8dp"
-                android:background="@drawable/rounded_button"
-                android:textSize="15sp"
-                android:text="upload"
-                android:textColor="@android:color/white"
-                android:id="@+id/btnUpload"/>
+            <!--<Button-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_margin="8dp"-->
+                <!--android:background="@drawable/rounded_button"-->
+                <!--android:textSize="15sp"-->
+                <!--android:text="upload"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:id="@+id/btnUpload"/>-->
 
         </LinearLayout>
 

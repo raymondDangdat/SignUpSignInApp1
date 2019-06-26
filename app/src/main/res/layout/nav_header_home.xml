@@ -12,18 +12,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:scaleType="centerCrop"
-        android:layout_height="100dp"
+        app:civ_border_width="5dp"
+        app:civ_border_color="@color/colorPrimary"
+        android:src="@drawable/girls"
+        android:layout_width="150dp"
         android:contentDescription="@string/nav_header_desc"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/ic_account_circle" />
+        android:paddingTop="8dp"
+        android:layout_height="150dp" />
+
     <TextView
         android:id="@+id/email"
         android:layout_marginTop="8dp"
-        android:text="laraymonddangdat@gmail.com"
+        android:textStyle="italic"
+        android:textSize="15sp"
+        android:text="Manage Hostel At Ease!"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -32,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Raymond Dangdat Delmut"
+            android:textStyle="bold"
+            android:text="PLASU Hostel App v 1.0"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 </LinearLayout>

@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/hostel"/>
+                    android:src="@drawable/chostel"/>
 
                 <TextView
                     android:id="@+id/txt_gdom"
@@ -44,7 +44,7 @@
                     android:layout_height="match_parent"
                     android:textSize="13sp"
                     android:gravity="center"
-                    android:text="Manage Girls Dom"
+                    android:text="Manage Girls Dorm"
                     android:textStyle="italic"
                     android:textColor="@color/colorPrimary"/>
 
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/hostel"/>
+                    android:src="@drawable/chostel"/>
 
                 <TextView
                     android:id="@+id/txt_bdom"
@@ -78,7 +78,7 @@
                     android:layout_height="match_parent"
                     android:textSize="13sp"
                     android:gravity="center"
-                    android:text="Manage Boys Dom"
+                    android:text="Manage Boys Dorm"
                     android:textStyle="italic"
                     android:textColor="@color/colorPrimary"/>
 
@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/hostel"/>
+                    android:src="@drawable/code"/>
 
                 <TextView
                     android:id="@+id/txt_confirmStudent"
@@ -124,7 +124,7 @@
                     android:layout_height="match_parent"
                     android:textSize="13sp"
                     android:gravity="center"
-                    android:text="Confirm Student"
+                    android:text="Generate Reg. Codes"
                     android:textStyle="italic"
                     android:textColor="@color/colorPrimary"/>
 
@@ -150,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/hostel"/>
+                    android:src="@drawable/rules"/>
 
                 <TextView
                     android:id="@+id/txt_hostelRules"

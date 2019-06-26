@@ -3,20 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/hostel"
+    android:background="@drawable/b"
     android:layout_height="match_parent"
     tools:context=".GirlsRoomList">
 
     <include
         layout="@layout/app_bar_layout"
         android:id="@+id/girls_room_toolbar">
-
     </include>
+
+    <LinearLayout
+        android:id="@+id/roomCount"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/girls_room_toolbar">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Total beds created"
+            android:textSize="16sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/number_of_rooms"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Loading..."
+            android:textSize="25sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            android:layout_margin="10dp"
+            android:textAlignment="textEnd"/>
+
+    </LinearLayout>
+
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_girls_room"
         android:scrollbars="vertical"
+        android:layout_below="@+id/roomCount"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 

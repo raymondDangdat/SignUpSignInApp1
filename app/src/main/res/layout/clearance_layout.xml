@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_view_profile"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/ic_account_circle"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_fullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/full_name"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="textStart"
+                android:layout_marginLeft="8dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/materials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Materials issued"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="textStart"
+                android:layout_marginLeft="8dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

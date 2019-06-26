@@ -68,13 +68,13 @@ public class AddStaff extends AppCompatActivity {
         imageButtonStaff = findViewById(R.id.setUpImageButton);
         btnAddStaff = findViewById(R.id.buttonAddStaff);
 
-        spinnerRole = findViewById(R.id.roles);
+
         mProgress = new ProgressDialog(this);
 
 
         //init firebase
         db = FirebaseDatabase.getInstance();
-        staff = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("users").child("Staff");
+        staff = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("users").child("admin").child("bursary");
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("staffProfile");
         mAuth = FirebaseAuth.getInstance();

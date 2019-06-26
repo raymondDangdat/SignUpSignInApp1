@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/hostel"
+    android:background="@drawable/b"
     tools:context=".BoysChaletActivity">
 
 
@@ -13,12 +13,41 @@
         android:id="@+id/boys_chalet_toolbar">
 
     </include>
+    <LinearLayout
+        android:id="@+id/chaletCount"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/boys_chalet_toolbar">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:text="Number of chalets"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/txtChaletCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            android:text="Loading..."
+            android:layout_margin="10dp"
+            android:textAlignment="textEnd"/>
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_chalets"
         android:scrollbars="vertical"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/boys_chalet_toolbar"
+        android:layout_below="@+id/chaletCount"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>

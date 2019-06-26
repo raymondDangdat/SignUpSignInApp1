@@ -106,7 +106,7 @@ public class Home extends AppCompatActivity
         img_confirmStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, ConfirmStudentActivity.class));
+                startActivity(new Intent(Home.this, GenerateRegPin.class));
             }
         });
 
@@ -433,14 +433,8 @@ public class Home extends AppCompatActivity
             //open add staff activity
             Intent addStaff = new Intent(Home.this, AddStaff.class);
             startActivity(addStaff);
-        } else if (id == R.id.nav_boysChalet) {
-            startActivity(new Intent(Home.this, BoysChaletActivity.class));
-
-        } else if (id == R.id.nav_girls_chalet) {
-            Intent girlsIntent = new Intent(Home.this, GirlsChaletActivity.class);
-            startActivity(girlsIntent);
-
         } else if (id == R.id.nav_clearance) {
+            startActivity(new Intent(Home.this, Clearance.class));
 
         } else if (id == R.id.nav_students) {
             Intent viewStudents = new Intent(Home.this, ViewStudents.class);
@@ -453,19 +447,18 @@ public class Home extends AppCompatActivity
             auth.signOut();
             startActivity(signIn);
 
-        }
-        else if (id == R.id.nav_generate_codes){
-            Intent genPin = new Intent(Home.this, GenerateRegPin.class);
-            startActivity(genPin);
-
-        }
-        else if (id == R.id.register_eligible_student){
-            Intent eligibleIntent = new Intent(Home.this, ConfirmStudentActivity.class);
+        }else if (id == R.id.register_eligible_student){
+            Intent eligibleIntent = new Intent(Home.this, IssueHostelMaterial.class);
             startActivity(eligibleIntent);
 
         }else if (id == R.id.nav_view_staff){
             Intent viewStaff = new Intent(Home.this, ViewStaff.class);
             startActivity(viewStaff);
+        }else if (id == R.id.nav_change_password){
+            Intent myIntent = new Intent(Home.this, ChangePassword.class);
+            startActivity(myIntent);
+        }else if (id == R.id.nav_codes_generated){
+            startActivity(new Intent(Home.this, CodeDisplayActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

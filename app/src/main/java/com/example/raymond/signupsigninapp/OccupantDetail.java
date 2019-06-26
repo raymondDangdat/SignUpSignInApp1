@@ -41,7 +41,8 @@ public class OccupantDetail extends AppCompatActivity {
         department = findViewById(R.id.department);
         profilePic = findViewById(R.id.profile_image);
 
-        applications = FirebaseDatabase.getInstance().getReference().child("Applications");
+        applications = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("Occupants");
+
 
         if (getIntent() != null){
             occupantId= getIntent().getStringExtra("occupantId");
