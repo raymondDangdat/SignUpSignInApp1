@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/girls_room_toolbar">
         <TextView
+            android:id="@+id/totalBeds"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

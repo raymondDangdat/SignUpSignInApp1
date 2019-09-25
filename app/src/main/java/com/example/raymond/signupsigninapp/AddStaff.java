@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AddStaff extends AppCompatActivity {
     private EditText editTextFullName, editTextPassword, editTextEmail, editTextCPassword;
     private Button btnAddStaff;
-    private CircleImageView imageButtonStaff;
+    //private CircleImageView imageButtonStaff;
 
     private Toolbar addStaffToolBar;
 
@@ -45,8 +45,8 @@ public class AddStaff extends AppCompatActivity {
 
     private FirebaseDatabase db;
     private DatabaseReference staff;
-    private StorageReference storageReference;
-    private FirebaseStorage storage;
+    //private StorageReference storageReference;
+    //private FirebaseStorage storage;
     private FirebaseAuth mAuth;
 
     private static final int GALLERY_REQUEST_CODE = 1;
@@ -65,7 +65,7 @@ public class AddStaff extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextEmail = findViewById(R.id.editTextStaffEmail);
         editTextCPassword = findViewById(R.id.editTextCPassword);
-        imageButtonStaff = findViewById(R.id.setUpImageButton);
+      //  imageButtonStaff = findViewById(R.id.setUpImageButton);
         btnAddStaff = findViewById(R.id.buttonAddStaff);
 
 
@@ -74,9 +74,9 @@ public class AddStaff extends AppCompatActivity {
 
         //init firebase
         db = FirebaseDatabase.getInstance();
-        staff = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("users").child("admin").child("bursary");
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference("staffProfile");
+        staff = FirebaseDatabase.getInstance().getReference().child("plasuHostel2019").child("users").child("admin");
+        //storage = FirebaseStorage.getInstance();
+        //storageReference = storage.getReference("staffProfile");
         mAuth = FirebaseAuth.getInstance();
 
         //initialize toolBar
@@ -90,15 +90,15 @@ public class AddStaff extends AppCompatActivity {
 
 
         //onclick listeners
-        imageButtonStaff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
-            }
-        });
+        //imageButtonStaff.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent galleryIntent = new Intent();
+//                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                galleryIntent.setType("image/*");
+//                startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
+//            }
+//        });
 
         btnAddStaff.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,35 +114,27 @@ public class AddStaff extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
         String confirmPassword = editTextCPassword.getText().toString();
         final String fullName = editTextFullName.getText().toString();
-        final String role = spinnerRole.getSelectedItem().toString().trim();
+        //final String role = spinnerRole.getSelectedItem().toString().trim();
 
 
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword) && mImageUri != null
+        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword)
                 && !TextUtils.isEmpty(fullName)){
             if (password.equals(confirmPassword)){
                 mProgress.show();
                 mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        StorageReference filepath = storageReference.child(mImageUri.getLastPathSegment());
-                        filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                final String user_id = mAuth.getCurrentUser().getUid();
-                                String downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                        final String user_id = mAuth.getCurrentUser().getUid();
+                        staff.child(user_id).child("email").setValue(email);
+                        staff.child(user_id).child("fullName").setValue(fullName);
+                        //staff.child(user_id).child("role").setValue(role);
+                        staff.child(user_id).child("uId").setValue(user_id);
 
-                                staff.child(user_id).child("email").setValue(email);
-                                staff.child(user_id).child("fullName").setValue(fullName);
-                                staff.child(user_id).child("role").setValue(role);
-
-
-                                staff.child(user_id).child("image").setValue(downloadUrl);
-                                mProgress.dismiss();
-                                Toast.makeText(AddStaff.this, "Staff added", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(AddStaff.this, ViewStaff.class));
-                                finish();
-                                //sendEmailVerification();
-
+                        mProgress.dismiss();
+                        Toast.makeText(AddStaff.this, "Staff added", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(AddStaff.this, ViewStaff.class));
+                        finish();
+                        //sendEmailVerification()
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -156,18 +148,11 @@ public class AddStaff extends AppCompatActivity {
                             }
                         });
 
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        mProgress.dismiss();
-                        Toast.makeText(AddStaff.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }else {
+                    }else {
                 Toast.makeText(this, "Password miss match", Toast.LENGTH_SHORT).show();
             }
+
+
 
         }else {
             Toast.makeText(this, "Sorry can not add staff with empty field(s) or without a picture", Toast.LENGTH_SHORT).show();
@@ -224,7 +209,7 @@ public class AddStaff extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mImageUri = result.getUri();
-                imageButtonStaff.setImageURI(mImageUri);
+                //imageButtonStaff.setImageURI(mImageUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }

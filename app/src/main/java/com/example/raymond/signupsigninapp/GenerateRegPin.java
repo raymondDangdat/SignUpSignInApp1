@@ -49,7 +49,7 @@ public class GenerateRegPin extends AppCompatActivity {
                 SimpleDateFormat format1 = new SimpleDateFormat("yyy-MM-dd hh:mm:ss a", Locale.getDefault());
                 String date = format1.format(myDate);
                 Random r = new Random();
-                int n = 10000 + r.nextInt(90000);
+                int n = 100000000 + r.nextInt(900010101);
                 String code = String.valueOf(n);
 
 

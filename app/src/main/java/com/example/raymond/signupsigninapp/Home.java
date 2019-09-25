@@ -113,7 +113,7 @@ public class Home extends AppCompatActivity
         img_hostelRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, HostelRules.class));
+                startActivity(new Intent(Home.this, PostRules.class));
             }
         });
 
@@ -415,7 +415,12 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.nav_sign_out) {
+            //logout
+            Intent signIn = new Intent(Home.this, MainActivity.class);
+            signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            auth.signOut();
+            startActivity(signIn);
             return true;
         }
 

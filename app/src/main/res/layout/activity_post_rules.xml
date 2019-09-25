@@ -16,6 +16,12 @@
             layout="@layout/app_bar_layout"
             android:id="@+id/postRulesToolBar"
             />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/recycler_rules"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
 
         <EditText
@@ -31,7 +37,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/edit_text_rule"
@@ -54,7 +60,7 @@
             android:textColor="@android:color/white"
             android:textAlignment="center"
             android:textSize="25sp"
-            android:text="Send"
+            android:text="POST"
             android:background="@drawable/rounded_button"/>
 
 

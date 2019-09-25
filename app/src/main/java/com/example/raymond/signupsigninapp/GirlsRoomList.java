@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class GirlsRoomList extends AppCompatActivity {
     //private Button btnSelect, btnUpload;
 
     private int countRoom;
-    private TextView txtRoomCount;
+    private TextView txtRoomCount, txtCount;
 
 
 
@@ -91,6 +92,7 @@ public class GirlsRoomList extends AppCompatActivity {
         storageReference = storage.getReference().child("GirlsRoomImages");
 
         txtRoomCount = findViewById(R.id.number_of_rooms);
+        txtCount = findViewById(R.id.totalBeds);
 
 
         //init
@@ -140,7 +142,7 @@ public class GirlsRoomList extends AppCompatActivity {
                     txtRoomCount.setText(Integer.toString(countRoom));
 
                 }else{
-                    txtRoomCount.setText("No Room");
+                    txtRoomCount.setText("No Bed Space");
                 }
             }
 
@@ -154,7 +156,7 @@ public class GirlsRoomList extends AppCompatActivity {
 
     private void showAddBoysRoomDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsRoomList.this);
-        alertDialog.setTitle("Add new girls room");
+        alertDialog.setTitle("Add new girls bed space");
         alertDialog.setMessage("Please fill the information correctly");
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -200,7 +202,7 @@ public class GirlsRoomList extends AppCompatActivity {
                 //we just create a new category
                 if (newGirlsRoom != null){
                     girlsRoomList.push().setValue(newGirlsRoom);
-                    Toast.makeText(GirlsRoomList.this, "Room added successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GirlsRoomList.this, "Bed space added successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(GirlsRoomList.this, "New room is empty", Toast.LENGTH_SHORT).show();
@@ -251,6 +253,240 @@ public class GirlsRoomList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
+
+
+
+
+    //sorting
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_sort) {
+            //display alert to choose sort type
+            showSortDialog();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSortDialog() {
+        //Options to display
+        String[] sortOptions = {"All Beds", "Available Beds", "Occupied Beds"};
+        //create alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Boys Bed Summary: ")
+                .setIcon(R.drawable.ic_action_sort)
+                .setItems(sortOptions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //the which contains the index position of the selected item
+                        if (which==0){
+                            //All beds selected
+                            loadAllBeds(chaletId);
+                        }else if (which==1){
+                            //load available beds
+                            loadAvailableBeds(chaletId);
+                        }else if (which==2){
+                            //occupied beds
+                            loadOccupiedBeds(chaletId);
+                        }
+                    }
+                });
+        builder.show();
+    }
+
+    private void loadAllBeds(String chaletId) {
+
+        //count
+        girlsRoomList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countRoom = (int) dataSnapshot.getChildrenCount();
+                    txtRoomCount.setText(Integer.toString(countRoom));
+
+                }else{
+                    txtRoomCount.setText("No Bed");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<GirlsRoom>options = new FirebaseRecyclerOptions.Builder<GirlsRoom>()
+                .setQuery(girlsRoomList, GirlsRoom.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<GirlsRoom, GirlsRoomViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull GirlsRoomViewHolder holder, int position, @NonNull GirlsRoom model) {
+                holder.txtRoomDescription.setText(model.getRoomDescription());
+                holder.txtBedNumber.setText(model.getBedNumber());
+                holder.txtStatus.setText(model.getStatus());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+
+
+
+
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //code later
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public GirlsRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.girls_room_item, parent, false);
+                GirlsRoomViewHolder viewHolder = new GirlsRoomViewHolder(view);
+                return viewHolder;
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    private void loadAvailableBeds(String chaletId) {
+        txtCount.setText("Available beds");
+
+        //available beds
+        girlsRoomList.orderByChild("status").equalTo("available").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countRoom = (int) dataSnapshot.getChildrenCount();
+                    txtRoomCount.setText(Integer.toString(countRoom));
+
+                }else{
+                    txtRoomCount.setText("No Available Bed");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<GirlsRoom>options = new FirebaseRecyclerOptions.Builder<GirlsRoom>()
+                .setQuery(girlsRoomList.orderByChild("status").equalTo("available"), GirlsRoom.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<GirlsRoom, GirlsRoomViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull GirlsRoomViewHolder holder, int position, @NonNull GirlsRoom model) {
+                holder.txtRoomDescription.setText(model.getRoomDescription());
+                holder.txtBedNumber.setText(model.getBedNumber());
+                holder.txtStatus.setText(model.getStatus());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+
+
+
+
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //code later
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public GirlsRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.girls_room_item, parent, false);
+                GirlsRoomViewHolder viewHolder = new GirlsRoomViewHolder(view);
+                return viewHolder;
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+
+    }
+
+    private void loadOccupiedBeds(String chaletId) {
+        txtCount.setText("Occupied beds");
+        //occupied
+        girlsRoomList.orderByChild("status").equalTo("occupied").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    countRoom = (int) dataSnapshot.getChildrenCount();
+                    txtRoomCount.setText(Integer.toString(countRoom));
+
+                }else{
+                    txtRoomCount.setText("No Occupied Bed");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        FirebaseRecyclerOptions<GirlsRoom>options = new FirebaseRecyclerOptions.Builder<GirlsRoom>()
+                .setQuery(girlsRoomList.orderByChild("status").equalTo("occupied"), GirlsRoom.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<GirlsRoom, GirlsRoomViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull GirlsRoomViewHolder holder, int position, @NonNull GirlsRoom model) {
+                holder.txtRoomDescription.setText(model.getRoomDescription());
+                holder.txtBedNumber.setText(model.getBedNumber());
+                holder.txtStatus.setText(model.getStatus());
+                //Picasso.get().load(model.getImage()).into(viewHolder.imageViewRoom);
+
+
+
+
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //code later
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public GirlsRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.girls_room_item, parent, false);
+                GirlsRoomViewHolder viewHolder = new GirlsRoomViewHolder(view);
+                return viewHolder;
+            }
+        };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+
 
 
     //choose image
@@ -336,7 +572,7 @@ public class GirlsRoomList extends AppCompatActivity {
 
     private void showUpdateBoysRoomDialog(final String key, final GirlsRoom item) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(GirlsRoomList.this);
-        alertDialog.setTitle("Edit room");
+        alertDialog.setTitle("Edit Bed Information");
         alertDialog.setMessage("Please fill the information correctly");
 
         LayoutInflater inflater = this.getLayoutInflater();
@@ -381,7 +617,7 @@ public class GirlsRoomList extends AppCompatActivity {
                 item.setRoomDescription(editTextRoomDescription.getText().toString());
                 item.setBedNumber(editTextBedNumber.getText().toString());
                 girlsRoomList.child(key).setValue(item);
-                Toast.makeText(GirlsRoomList.this, "Room edited  successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GirlsRoomList.this, "Bed info edited  successfully", Toast.LENGTH_SHORT).show();
 
 
             }

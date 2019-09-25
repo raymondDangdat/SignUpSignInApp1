@@ -107,7 +107,7 @@ public class BoysChaletActivity extends AppCompatActivity {
 
 
         //loadChalets
-        //loadChalets();
+        loadChalets();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
